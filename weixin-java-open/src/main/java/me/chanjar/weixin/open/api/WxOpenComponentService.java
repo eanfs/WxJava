@@ -7,6 +7,7 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.open.bean.WxOpenMaCodeTemplate;
 import me.chanjar.weixin.open.bean.message.WxOpenXmlMessage;
+import me.chanjar.weixin.open.bean.result.WxOpenAccountFastRegisterResult;
 import me.chanjar.weixin.open.bean.result.WxOpenAuthorizerInfoResult;
 import me.chanjar.weixin.open.bean.result.WxOpenAuthorizerOptionResult;
 import me.chanjar.weixin.open.bean.result.WxOpenQueryAuthResult;
@@ -27,6 +28,11 @@ public interface WxOpenComponentService {
 
   String COMPONENT_LOGIN_PAGE_URL = "https://mp.weixin.qq.com/cgi-bin/componentloginpage?component_appid=%s&pre_auth_code=%s&redirect_uri=%s";
   String CONNECT_OAUTH2_AUTHORIZE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s&component_appid=%s#wechat_redirect";
+
+  String COMPONENT_FAST_REGISTER_PAGE_URL = "https://mp.weixin.qq.com/cgi-bin/fastregisterauth?appid=%s&component_appid=%s&copy_wx_verify=%s&redirect_uri=%s";
+
+  String API_ACCOUNT_FAST_REGISTER_URL = "https://api.weixin.qq.com/cgi-bin/account/fastregister";
+
 
   /**
    * 用code换取oauth2的access token
@@ -54,12 +60,25 @@ public interface WxOpenComponentService {
    */
   String getPreAuthUrl(String redirectURI) throws WxErrorException;
 
+  /**
+   * 从第三方平台跳转至微信公众平台授权注册页面
+   * */
+  String getFastRegisterAuthUrl(String appId, String redirectURI) throws WxErrorException;
+
+
   String route(WxOpenXmlMessage wxMessage) throws WxErrorException;
 
   /**
    * 使用授权码换取公众号或小程序的接口调用凭据和授权信息
    */
   WxOpenQueryAuthResult getQueryAuth(String authorizationCode) throws WxErrorException;
+
+
+  /**
+   * 公众号管理员扫码确认授权注册，并跳转回第三方平台,
+   * 第三方平台调用快速注册API完成注册
+   * */
+  WxOpenAccountFastRegisterResult accountFastRegister(String ticket) throws WxErrorException;
 
   /**
    * 获取授权方的帐号基本信息

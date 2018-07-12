@@ -136,7 +136,6 @@ public class WxPayRefundResult extends BaseWxPayResult implements Serializable {
         )
       );
     }
-
     this.setRefundCoupons(coupons);
   }
 }
