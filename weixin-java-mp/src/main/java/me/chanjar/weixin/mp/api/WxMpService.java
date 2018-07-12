@@ -500,6 +500,11 @@ public interface WxMpService {
    * @return WxMpWifiService
    */
   WxMpOcrService getOcrService();
+   * 返回快速注册小程序实现接口，以方便调用其各个接口
+   *
+   * @return WxMpRegisterAppService
+   */
+  WxMpRegisterAppService getRegisterAppService();
 
   void setKefuService(WxMpKefuService kefuService);
 
@@ -545,4 +550,5 @@ public interface WxMpService {
   WxMpCommentService getCommentService();
 
   void setCommentService(WxMpCommentService commentService);
+  void setRegisterAppService(WxMpRegisterAppService registerAppService);
 }

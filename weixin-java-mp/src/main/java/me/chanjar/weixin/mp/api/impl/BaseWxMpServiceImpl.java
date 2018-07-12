@@ -67,6 +67,8 @@ public abstract class BaseWxMpServiceImpl<H, P> implements WxMpService, RequestH
   private WxMpOcrService ocrService = new WxMpOcrServiceImpl(this);
 
   private Map<String, WxMpConfigStorage> configStorageMap;
+  private WxMpRegisterAppService registerAppService = new WxMpRegisterAppServiceImpl(this);
+
 
   private int retrySleepMillis = 1000;
   private int maxRetryTimes = 5;
@@ -513,6 +515,11 @@ public abstract class BaseWxMpServiceImpl<H, P> implements WxMpService, RequestH
   }
 
   @Override
+  public WxMpRegisterAppService getRegisterAppService() {
+    return this.registerAppService;
+  }
+
+  @Override
   public void setKefuService(WxMpKefuService kefuService) {
     this.kefuService = kefuService;
   }
@@ -585,6 +592,11 @@ public abstract class BaseWxMpServiceImpl<H, P> implements WxMpService, RequestH
   @Override
   public void setMassMessageService(WxMpMassMessageService massMessageService) {
     this.massMessageService = massMessageService;
+  }
+
+  @Override
+  public void setRegisterAppService(WxMpRegisterAppService registerAppService) {
+    this.registerAppService = registerAppService;
   }
 
   @Override
