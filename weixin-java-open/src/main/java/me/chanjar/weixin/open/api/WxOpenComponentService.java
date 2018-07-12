@@ -73,13 +73,6 @@ public interface WxOpenComponentService {
    */
   WxOpenQueryAuthResult getQueryAuth(String authorizationCode) throws WxErrorException;
 
-
-  /**
-   * 公众号管理员扫码确认授权注册，并跳转回第三方平台,
-   * 第三方平台调用快速注册API完成注册
-   * */
-  WxOpenAccountFastRegisterResult accountFastRegister(String ticket) throws WxErrorException;
-
   /**
    * 获取授权方的帐号基本信息
    */
