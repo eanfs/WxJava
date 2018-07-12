@@ -254,15 +254,16 @@
   </dependencyManagement>
 
   <!-- <distributionManagement>
-      <snapshotRepository>
-        <id>ossrh</id>
-        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      </snapshotRepository>
-      <repository>
-        <id>ossrh</id>
-        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-      </repository>
-    </distributionManagement> -->
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>esen_release</id>
+      <name>Internal Releases</name>
+      <url>http://nexus.esenyun.com/nexus/content/repositories/releases/</url>
+    </repository>
+  </distributionManagement> -->
   <distributionManagement>
     <repository>
       <id>esen_release</id>
