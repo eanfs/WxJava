@@ -359,8 +359,8 @@
         <version>1.6.3</version>
         <extensions>true</extensions>
         <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <serverId>esen_snapshot</serverId>
+          <nexusUrl>http://nexus.esenyun.com/</nexusUrl>
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
         </configuration>
       </plugin>
