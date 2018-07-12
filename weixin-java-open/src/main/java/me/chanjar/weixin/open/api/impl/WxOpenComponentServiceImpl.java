@@ -20,6 +20,7 @@ import me.chanjar.weixin.open.bean.WxOpenComponentAccessToken;
 import me.chanjar.weixin.open.bean.WxOpenMaCodeTemplate;
 import me.chanjar.weixin.open.bean.auth.WxOpenAuthorizationInfo;
 import me.chanjar.weixin.open.bean.message.WxOpenXmlMessage;
+import me.chanjar.weixin.open.bean.result.WxOpenAccountFastRegisterResult;
 import me.chanjar.weixin.open.bean.result.WxOpenAuthorizerInfoResult;
 import me.chanjar.weixin.open.bean.result.WxOpenAuthorizerOptionResult;
 import me.chanjar.weixin.open.bean.result.WxOpenQueryAuthResult;
@@ -227,6 +228,11 @@ public class WxOpenComponentServiceImpl implements WxOpenComponentService {
     return preAuthUrlStr;
   }
 
+
+  @Override
+  public String getFastRegisterAuthUrl(String appId, String redirectURI) throws WxErrorException {
+    return String.format(COMPONENT_FAST_REGISTER_PAGE_URL, appId, getWxOpenConfigStorage().getComponentAppId(), "1", URIUtil.encodeURIComponent(redirectURI));
+  }
 
   @Override
   public String route(final WxOpenXmlMessage wxMessage) throws WxErrorException {
