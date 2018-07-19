@@ -34,9 +34,6 @@ public interface WxOpenComponentService {
 
   String COMPONENT_FAST_REGISTER_PAGE_URL = "https://mp.weixin.qq.com/cgi-bin/fastregisterauth?appid=%s&component_appid=%s&copy_wx_verify=%s&redirect_uri=%s";
 
-  String API_ACCOUNT_FAST_REGISTER_URL = "https://api.weixin.qq.com/cgi-bin/account/fastregister";
-
-
   /**
    * 用code换取oauth2的access token
    */
