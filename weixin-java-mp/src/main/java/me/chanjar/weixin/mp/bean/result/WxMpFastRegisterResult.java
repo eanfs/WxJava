@@ -1,6 +1,9 @@
 package me.chanjar.weixin.mp.bean.result;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import me.chanjar.weixin.common.util.ToStringUtils;
 import me.chanjar.weixin.mp.util.json.WxMpGsonBuilder;
 
@@ -20,7 +23,7 @@ public class WxMpFastRegisterResult implements Serializable {
 
 
   public static WxMpFastRegisterResult fromJson(String json) {
-    return WxMpGsonBuilder.create().fromJson(json, WxMpFastRegisterResult.class);
+    return WxMpGsonBuilder.INSTANCE.create().fromJson(json, WxMpFastRegisterResult.class);
   }
 
   @Override

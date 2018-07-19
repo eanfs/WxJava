@@ -63,6 +63,8 @@ public class WxMpGsonBuilder {
     INSTANCE.registerTypeAdapter(WxMpMemberCardUserInfoResult.class, new WxMpMemberCardUserInfoResultGsonAdapter());
     INSTANCE.registerTypeAdapter(WxMpMemberCardUpdateResult.class, new WxMpMemberCardUpdateResultGsonAdapter());
     INSTANCE.registerTypeAdapter(WxMpMemberCardActivateTempInfoResult.class, new WxMpMemberCardActivateTempInfoResultGsonAdapter());
+    INSTANCE.registerTypeAdapter(WxMpFastRegisterResult.class, new WxMpFastRegisterAdapter());
+
   }
 
   public static Gson create() {
