@@ -17,6 +17,8 @@ public class WxMpRegisterAppServiceImpl implements WxMpRegisterAppService {
 
   private static final String API_URL_PREFIX = "https://api.weixin.qq.com/cgi-bin/account";
 
+  private static final String API_ACCOUNT_FAST_REGISTER_URL = "/fastregister";
+
   private WxMpService wxMpService;
 
   public WxMpRegisterAppServiceImpl(WxMpService wxMpService) {
@@ -30,7 +32,7 @@ public class WxMpRegisterAppServiceImpl implements WxMpRegisterAppService {
       throw new WxErrorException(WxError.builder().errorCode(-1).errorMsg("公众号扫码授权的凭证值不能为空！").build());
     }
 
-    String url = API_URL_PREFIX + "/getaccountbasicinfo";
+    String url = API_URL_PREFIX + API_ACCOUNT_FAST_REGISTER_URL;
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("ticket", ticket);
     String responseContent = this.wxMpService.post(url, jsonObject.toString());
