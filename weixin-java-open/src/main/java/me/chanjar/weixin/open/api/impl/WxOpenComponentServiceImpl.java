@@ -252,6 +252,12 @@ public class WxOpenComponentServiceImpl implements WxOpenComponentService {
     return String.format(COMPONENT_FAST_REGISTER_PAGE_URL, appId, getWxOpenConfigStorage().getComponentAppId(), "1", URIUtil.encodeURIComponent(redirectURI));
   }
 
+
+  @Override
+  public String getWxaRebindAdminAuthUrl(String appId, String redirectURI) throws WxErrorException {
+    return String.format(COMPONENT_REBIND_ADMIN_PAGE_URL, appId, getWxOpenConfigStorage().getComponentAppId(), URIUtil.encodeURIComponent(redirectURI));
+  }
+
   @Override
   public String route(final WxOpenXmlMessage wxMessage) throws WxErrorException {
     if (wxMessage == null) {

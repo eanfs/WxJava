@@ -38,6 +38,9 @@ public interface WxOpenComponentService {
 
   String COMPONENT_FAST_REGISTER_PAGE_URL = "https://mp.weixin.qq.com/cgi-bin/fastregisterauth?appid=%s&component_appid=%s&copy_wx_verify=%s&redirect_uri=%s";
 
+  String COMPONENT_REBIND_ADMIN_PAGE_URL = "https://mp.weixin.qq.com/wxopen/componentrebindadmin?appid=%s&component_appid=%s&redirect_uri=%s";
+
+
   /**
    * 用code换取oauth2的access token
    */
@@ -115,6 +118,11 @@ public interface WxOpenComponentService {
    * 从第三方平台跳转至微信公众平台授权注册页面
    * */
   String getFastRegisterAuthUrl(String appId, String redirectURI) throws WxErrorException;
+
+  /**
+   * 换绑小程序管理员接口, 第三方平台跳转至微信公众平台授权注册页面
+   * */
+  String getWxaRebindAdminAuthUrl(String appId, String redirectURI) throws WxErrorException;
 
 
   String route(WxOpenXmlMessage wxMessage) throws WxErrorException;
