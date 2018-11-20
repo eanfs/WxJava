@@ -1,4 +1,9 @@
 package me.chanjar.weixin.cp.config.impl;
+package me.chanjar.weixin.cp.config;
+
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Map;
 
 import me.chanjar.weixin.common.bean.WxAccessToken;
 import me.chanjar.weixin.common.util.http.apache.ApacheHttpClientBuilder;
@@ -19,6 +24,11 @@ public class WxCpDefaultConfigImpl implements WxCpConfigStorage, Serializable {
 
   private volatile String corpId;
   private volatile String corpSecret;
+  protected volatile Map<String, String> suiteVerifyTickets = new Hashtable<>();
+  protected volatile Map<String, String> suiteAccessTokens = new Hashtable<>();
+
+  protected volatile String corpId;
+  protected volatile String corpSecret;
 
   private volatile String token;
   protected volatile String accessToken;
@@ -56,6 +66,26 @@ public class WxCpDefaultConfigImpl implements WxCpConfigStorage, Serializable {
       baseApiUrl = WxCpApiPathConsts.DEFAULT_CP_BASE_URL;
     }
     return baseApiUrl + path;
+  }
+
+  @Override
+  public String getSuiteVerifyTicket(String suiteId) {
+    return suiteVerifyTickets.get(suiteId);
+  }
+
+  @Override
+  public String getSuiteAccessToken(String suiteId) {
+    return suiteAccessTokens.get(suiteId);
+  }
+
+  @Override
+  public void updateSuiteVerifyTicket(String suiteId, String ticket, int expiresIn) {
+    suiteVerifyTickets.put(suiteId, ticket);
+  }
+
+  @Override
+  public void updateSuiteAccessToken(String authCorpId, String accessToken, int expiresIn) {
+    suiteAccessTokens.put(authCorpId, accessToken);
   }
 
   @Override

@@ -51,6 +51,13 @@ public abstract class BaseWxCpServiceImpl<H, P> implements WxCpService, RequestH
   private WxCpOaService         oaService         = new WxCpOaServiceImpl(this);
   private WxCpTaskCardService   taskCardService   = new WxCpTaskCardServiceImpl(this);
   private WxCpExternalContactService externalContactService = new WxCpExternalContactServiceImpl(this);
+  private WxCpMediaService mediaService = new WxCpMediaServiceImpl(this);
+  private WxCpMenuService menuService = new WxCpMenuServiceImpl(this);
+  private WxCpOAuth2Service oauth2Service = new WxCpOAuth2ServiceImpl(this);
+  private WxCpTagService tagService = new WxCpTagServiceImpl(this);
+  private WxCpAgentService agentService = new WxCpAgentServiceImpl(this);
+  private WxCpSuiteService suiteService = new WxCpSuiteServiceImpl(this, this.configStorage);
+
 
   /**
    * 全局的是否正在刷新access token的锁
@@ -409,6 +416,12 @@ public abstract class BaseWxCpServiceImpl<H, P> implements WxCpService, RequestH
 
   @Override
   public RequestHttp<?, ?> getRequestHttp() {
+  public WxCpSuiteService getSuiteService() {
+    return suiteService;
+  }
+
+  @Override
+  public RequestHttp getRequestHttp() {
     return this;
   }
 

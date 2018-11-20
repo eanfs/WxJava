@@ -304,6 +304,7 @@ public interface WxCpService {
   WxCpAgentService getAgentService();
 
   WxCpOaService getOAService();
+  WxCpSuiteService getSuiteService();
 
   /**
    * http请求对象
