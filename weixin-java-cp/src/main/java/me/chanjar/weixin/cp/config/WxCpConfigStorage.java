@@ -12,6 +12,14 @@ import java.io.File;
  */
 public interface WxCpConfigStorage {
 
+  String getSuiteVerifyTicket(String suiteId);
+
+  String getSuiteAccessToken(String suiteId);
+
+  void updateSuiteVerifyTicket(String suiteId, String ticket, int expiresIn);
+
+  void updateSuiteAccessToken(String authCorpId, String accessToken, int expiresIn);
+
   String getAccessToken();
 
   boolean isAccessTokenExpired();
@@ -64,6 +72,8 @@ public interface WxCpConfigStorage {
   String getHttpProxyPassword();
 
   File getTmpDirFile();
+
+
 
   /**
    * http client builder

@@ -48,6 +48,8 @@ public abstract class WxCpServiceAbstractImpl<H, P> implements WxCpService, Requ
   private WxCpOAuth2Service oauth2Service = new WxCpOAuth2ServiceImpl(this);
   private WxCpTagService tagService = new WxCpTagServiceImpl(this);
   private WxCpAgentService agentService = new WxCpAgentServiceImpl(this);
+  private WxCpSuiteService suiteService = new WxCpSuiteServiceImpl(this, this.configStorage);
+
 
   /**
    * 全局的是否正在刷新access token的锁
@@ -352,6 +354,12 @@ public abstract class WxCpServiceAbstractImpl<H, P> implements WxCpService, Requ
 
   @Override
   public RequestHttp<?, ?> getRequestHttp() {
+  public WxCpSuiteService getSuiteService() {
+    return suiteService;
+  }
+
+  @Override
+  public RequestHttp getRequestHttp() {
     return this;
   }
 
