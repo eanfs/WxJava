@@ -3,6 +3,7 @@ package me.chanjar.weixin.cp.api.impl;
 import java.io.File;
 import java.io.IOException;
 
+import me.chanjar.weixin.cp.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,15 +25,6 @@ import me.chanjar.weixin.common.util.http.RequestExecutor;
 import me.chanjar.weixin.common.util.http.RequestHttp;
 import me.chanjar.weixin.common.util.http.SimpleGetRequestExecutor;
 import me.chanjar.weixin.common.util.http.SimplePostRequestExecutor;
-import me.chanjar.weixin.cp.api.WxCpAgentService;
-import me.chanjar.weixin.cp.api.WxCpChatService;
-import me.chanjar.weixin.cp.api.WxCpDepartmentService;
-import me.chanjar.weixin.cp.api.WxCpMediaService;
-import me.chanjar.weixin.cp.api.WxCpMenuService;
-import me.chanjar.weixin.cp.api.WxCpOAuth2Service;
-import me.chanjar.weixin.cp.api.WxCpService;
-import me.chanjar.weixin.cp.api.WxCpTagService;
-import me.chanjar.weixin.cp.api.WxCpUserService;
 import me.chanjar.weixin.cp.bean.WxCpMessage;
 import me.chanjar.weixin.cp.bean.WxCpMessageSendResult;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
@@ -354,13 +346,12 @@ public abstract class WxCpServiceAbstractImpl<H, P> implements WxCpService, Requ
 
   @Override
   public RequestHttp<?, ?> getRequestHttp() {
-  public WxCpSuiteService getSuiteService() {
-    return suiteService;
+    return this;
   }
 
   @Override
-  public RequestHttp getRequestHttp() {
-    return this;
+  public WxCpSuiteService getSuiteService() {
+    return suiteService;
   }
 
   @Override

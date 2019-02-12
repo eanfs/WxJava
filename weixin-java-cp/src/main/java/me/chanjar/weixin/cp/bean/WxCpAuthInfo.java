@@ -24,11 +24,11 @@ public class WxCpAuthInfo {
 
 
   public static WxCpAuthInfo fromJson(String json) {
-    return WxCpGsonBuilder.INSTANCE.create().fromJson(json, WxCpAuthInfo.class);
+    return WxCpGsonBuilder.create().fromJson(json, WxCpAuthInfo.class);
   }
 
   public String toJson() {
-    return WxCpGsonBuilder.INSTANCE.create().toJson(this);
+    return WxCpGsonBuilder.create().toJson(this);
   }
 
 }

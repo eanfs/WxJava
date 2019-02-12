@@ -55,10 +55,10 @@ public class WxCpAgentAuthInfo implements Serializable {
 
 
   public static WxCpAgentBasic fromJson(String json) {
-    return WxCpGsonBuilder.INSTANCE.create().fromJson(json, WxCpAgentBasic.class);
+    return WxCpGsonBuilder.create().fromJson(json, WxCpAgentBasic.class);
   }
 
   public String toJson() {
-    return WxCpGsonBuilder.INSTANCE.create().toJson(this);
+    return WxCpGsonBuilder.create().toJson(this);
   }
 }

@@ -19,10 +19,10 @@ public class WxCpPreAuth implements Serializable {
 
 
   public static WxCpPreAuth fromJson(String json) {
-    return WxCpGsonBuilder.INSTANCE.create().fromJson(json, WxCpPreAuth.class);
+    return WxCpGsonBuilder.create().fromJson(json, WxCpPreAuth.class);
   }
 
   public String toJson() {
-    return WxCpGsonBuilder.INSTANCE.create().toJson(this);
+    return WxCpGsonBuilder.create().toJson(this);
   }
 }

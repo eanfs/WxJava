@@ -71,11 +71,11 @@ public class WxCpAuthCorpInfo implements Serializable {
   private String corpSubIndustry;
 
   public static WxCpUser fromJson(String json) {
-    return WxCpGsonBuilder.INSTANCE.create().fromJson(json, WxCpUser.class);
+    return WxCpGsonBuilder.create().fromJson(json, WxCpUser.class);
   }
 
   public String toJson() {
-    return WxCpGsonBuilder.INSTANCE.create().toJson(this);
+    return WxCpGsonBuilder.create().toJson(this);
   }
 
 }

@@ -105,14 +105,6 @@ public interface WxOpenComponentService {
    * @throws WxErrorException
    */
   String getMobilePreAuthUrl(String redirectURI, String authType, String bizAppid) throws WxErrorException;
-   * 从第三方平台跳转至微信公众平台授权注册页面
-   * */
-  String getFastRegisterAuthUrl(String appId, String redirectURI) throws WxErrorException;
-
-  /**
-   * 换绑小程序管理员接口, 第三方平台跳转至微信公众平台授权注册页面
-   * */
-  String getWxaRebindAdminAuthUrl(String appId, String redirectURI) throws WxErrorException;
 
 
   String route(WxOpenXmlMessage wxMessage) throws WxErrorException;
