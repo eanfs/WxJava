@@ -1,6 +1,13 @@
 package me.chanjar.weixin.cp.api.impl;
 
 import com.google.common.base.Joiner;
+import java.io.File;
+import java.io.IOException;
+
+import me.chanjar.weixin.cp.api.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -416,13 +423,12 @@ public abstract class BaseWxCpServiceImpl<H, P> implements WxCpService, RequestH
 
   @Override
   public RequestHttp<?, ?> getRequestHttp() {
-  public WxCpSuiteService getSuiteService() {
-    return suiteService;
+    return this;
   }
 
   @Override
-  public RequestHttp getRequestHttp() {
-    return this;
+  public WxCpSuiteService getSuiteService() {
+    return suiteService;
   }
 
   @Override

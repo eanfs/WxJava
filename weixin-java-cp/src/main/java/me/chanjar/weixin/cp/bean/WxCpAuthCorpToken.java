@@ -19,10 +19,10 @@ public class WxCpAuthCorpToken implements Serializable {
 
 
   public static WxCpAuthCorpToken fromJson(String json) {
-    return WxCpGsonBuilder.INSTANCE.create().fromJson(json, WxCpAuthCorpToken.class);
+    return WxCpGsonBuilder.create().fromJson(json, WxCpAuthCorpToken.class);
   }
 
   public String toJson() {
-    return WxCpGsonBuilder.INSTANCE.create().toJson(this);
+    return WxCpGsonBuilder.create().toJson(this);
   }
 }
