@@ -83,6 +83,11 @@ public class WxConsts {
      * 小程序卡片(要求小程序与公众号已关联)
      */
     public static final String MINIPROGRAMPAGE = "miniprogrampage";
+
+    /**
+     * 企业微信小程序卡片
+     */
+    public static final String MINIPROGRAMNOTICE= "miniprogram_notice";
   }
 
   /**

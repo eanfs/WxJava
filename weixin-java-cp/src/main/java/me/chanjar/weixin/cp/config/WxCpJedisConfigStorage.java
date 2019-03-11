@@ -47,7 +47,7 @@ public class WxCpJedisConfigStorage implements WxCpConfigStorage {
   public WxCpJedisConfigStorage(JedisPool jedisPool) {
     this.jedisPool = jedisPool;
   }
-  
+
   public WxCpJedisConfigStorage(String host, int port) {
     jedisPool = new JedisPool(host, port);
   }
@@ -74,14 +74,14 @@ public class WxCpJedisConfigStorage implements WxCpConfigStorage {
   @Override
   public String getAccessToken() {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      return jedis.get(ACCESS_TOKEN_KEY);
+      return jedis.get(ACCESS_TOKEN_KEY + this.agentId);
     }
   }
 
   @Override
   public boolean isAccessTokenExpired() {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      String expiresTimeStr = jedis.get(ACCESS_TOKEN_EXPIRES_TIME_KEY);
+      String expiresTimeStr = jedis.get(ACCESS_TOKEN_EXPIRES_TIME_KEY + this.agentId);
 
       if (expiresTimeStr != null) {
         Long expiresTime = Long.parseLong(expiresTimeStr);
@@ -96,7 +96,7 @@ public class WxCpJedisConfigStorage implements WxCpConfigStorage {
   @Override
   public void expireAccessToken() {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      jedis.set(ACCESS_TOKEN_EXPIRES_TIME_KEY, "0");
+      jedis.set(ACCESS_TOKEN_EXPIRES_TIME_KEY + this.agentId, "0");
     }
   }
 
@@ -108,9 +108,9 @@ public class WxCpJedisConfigStorage implements WxCpConfigStorage {
   @Override
   public synchronized void updateAccessToken(String accessToken, int expiresInSeconds) {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      jedis.set(ACCESS_TOKEN_KEY, accessToken);
+      jedis.set(ACCESS_TOKEN_KEY + this.agentId, accessToken);
 
-      jedis.set(ACCESS_TOKEN_EXPIRES_TIME_KEY,
+      jedis.set(ACCESS_TOKEN_EXPIRES_TIME_KEY + this.agentId,
         (System.currentTimeMillis() + (expiresInSeconds - 200) * 1000L) + "");
     }
   }
@@ -146,7 +146,7 @@ public class WxCpJedisConfigStorage implements WxCpConfigStorage {
   @Override
   public String getJsapiTicket() {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      return jedis.get(JS_API_TICKET_KEY);
+      return jedis.get(JS_API_TICKET_KEY + this.agentId);
     }
   }
 
@@ -154,7 +154,7 @@ public class WxCpJedisConfigStorage implements WxCpConfigStorage {
   public boolean isJsapiTicketExpired() {
 
     try (Jedis jedis = this.jedisPool.getResource()) {
-      String expiresTimeStr = jedis.get(JS_API_TICKET_EXPIRES_TIME_KEY);
+      String expiresTimeStr = jedis.get(JS_API_TICKET_EXPIRES_TIME_KEY + this.agentId);
 
       if (expiresTimeStr != null) {
         Long expiresTime = Long.parseLong(expiresTimeStr);
@@ -169,7 +169,7 @@ public class WxCpJedisConfigStorage implements WxCpConfigStorage {
   @Override
   public void expireJsapiTicket() {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      jedis.set(JS_API_TICKET_EXPIRES_TIME_KEY, "0");
+      jedis.set(JS_API_TICKET_EXPIRES_TIME_KEY + this.agentId, "0");
     }
   }
 
@@ -177,9 +177,9 @@ public class WxCpJedisConfigStorage implements WxCpConfigStorage {
   public synchronized void updateJsapiTicket(String jsapiTicket, int expiresInSeconds) {
 
     try (Jedis jedis = this.jedisPool.getResource()) {
-      jedis.set(JS_API_TICKET_KEY, jsapiTicket);
+      jedis.set(JS_API_TICKET_KEY + this.agentId, jsapiTicket);
 
-      jedis.set(JS_API_TICKET_EXPIRES_TIME_KEY,
+      jedis.set(JS_API_TICKET_EXPIRES_TIME_KEY + this.agentId,
         (System.currentTimeMillis() + (expiresInSeconds - 200) * 1000L + ""));
     }
 
@@ -233,7 +233,7 @@ public class WxCpJedisConfigStorage implements WxCpConfigStorage {
   @Override
   public long getExpiresTime() {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      String expiresTimeStr = jedis.get(ACCESS_TOKEN_EXPIRES_TIME_KEY);
+      String expiresTimeStr = jedis.get(ACCESS_TOKEN_EXPIRES_TIME_KEY + this.agentId);
 
       if (expiresTimeStr != null) {
         return Long.parseLong(expiresTimeStr);

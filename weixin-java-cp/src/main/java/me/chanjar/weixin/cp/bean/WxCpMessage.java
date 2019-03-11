@@ -6,16 +6,10 @@ import java.util.List;
 
 import lombok.Data;
 import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.cp.bean.article.MpContentItem;
 import me.chanjar.weixin.cp.bean.article.MpnewsArticle;
 import me.chanjar.weixin.cp.bean.article.NewArticle;
-import me.chanjar.weixin.cp.bean.messagebuilder.FileBuilder;
-import me.chanjar.weixin.cp.bean.messagebuilder.ImageBuilder;
-import me.chanjar.weixin.cp.bean.messagebuilder.MpnewsBuilder;
-import me.chanjar.weixin.cp.bean.messagebuilder.NewsBuilder;
-import me.chanjar.weixin.cp.bean.messagebuilder.TextBuilder;
-import me.chanjar.weixin.cp.bean.messagebuilder.TextCardBuilder;
-import me.chanjar.weixin.cp.bean.messagebuilder.VideoBuilder;
-import me.chanjar.weixin.cp.bean.messagebuilder.VoiceBuilder;
+import me.chanjar.weixin.cp.bean.messagebuilder.*;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 
 /**
@@ -37,6 +31,9 @@ public class WxCpMessage implements Serializable {
   private String thumbMediaId;
   private String title;
   private String description;
+  private String appId;
+  private String page;
+  private Boolean emphasisFirstItem;
   private String musicUrl;
   private String hqMusicUrl;
   private String safe;
@@ -44,6 +41,7 @@ public class WxCpMessage implements Serializable {
   private String btnTxt;
   private List<NewArticle> articles = new ArrayList<>();
   private List<MpnewsArticle> mpnewsArticles = new ArrayList<>();
+  private List<MpContentItem> contentItems = new ArrayList<>();
 
   /**
    * 获得文本消息builder.
@@ -101,6 +99,13 @@ public class WxCpMessage implements Serializable {
     return new FileBuilder();
   }
 
+  /**
+   * 获得小程序消息 builder.
+   */
+  public static MiniAppNoticeBuilder MPNOTICE() {
+    return new MiniAppNoticeBuilder();
+  }
+
 
   /**
    * <pre>
@@ -112,6 +117,7 @@ public class WxCpMessage implements Serializable {
    * {@link WxConsts.KefuMsgType#VIDEO}
    * {@link WxConsts.KefuMsgType#NEWS}
    * {@link WxConsts.KefuMsgType#MPNEWS}
+   * {@link WxConsts.KefuMsgType#MINIPROGRAMNOTICE}
    * </pre>
    *
    * @param msgType 消息类型

@@ -11,6 +11,7 @@ package me.chanjar.weixin.cp.util.json;
 import com.google.gson.*;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.cp.bean.WxCpMessage;
+import me.chanjar.weixin.cp.bean.article.MpContentItem;
 import me.chanjar.weixin.cp.bean.article.MpnewsArticle;
 import me.chanjar.weixin.cp.bean.article.NewArticle;
 import org.apache.commons.lang3.StringUtils;
@@ -119,6 +120,27 @@ public class WxCpMessageGsonAdapter implements JsonSerializer<WxCpMessage> {
         newsJsonObject.add("articles", articleJsonArray);
       }
       messageJson.add("mpnews", newsJsonObject);
+    }
+
+    if (WxConsts.KefuMsgType.MINIPROGRAMNOTICE.equals(message.getMsgType())) {
+      JsonObject noticeJsonObject = new JsonObject();
+
+      JsonArray contentJsonArray = new JsonArray();
+      for (MpContentItem item : message.getContentItems()) {
+        JsonObject itemJson = new JsonObject();
+        itemJson.addProperty("key", item.getKey());
+        itemJson.addProperty("value", item.getValue());
+        contentJsonArray.add(itemJson);
+      }
+
+      noticeJsonObject.add("content_item", contentJsonArray);
+      noticeJsonObject.addProperty("appid", message.getAppId());
+      noticeJsonObject.addProperty("page", message.getPage());
+      noticeJsonObject.addProperty("title", message.getTitle());
+      noticeJsonObject.addProperty("description", message.getDescription());
+      noticeJsonObject.addProperty("emphasis_first_item", message.getEmphasisFirstItem());
+
+      messageJson.add("miniprogram_notice", noticeJsonObject);
     }
 
     return messageJson;

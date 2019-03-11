@@ -11,6 +11,8 @@ import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.cp.api.WxCpAgentService;
 import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.bean.WxCpAgent;
+import me.chanjar.weixin.cp.bean.WxCpAgentScope;
+import me.chanjar.weixin.cp.bean.WxCpMessageSendResult;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 
 
@@ -50,6 +52,17 @@ public class WxCpAgentServiceImpl implements WxCpAgentService {
     if (jsonObject.get("errcode").getAsInt() != 0) {
       throw new WxErrorException(WxError.fromJson(responseContent));
     }
+  }
+
+  @Override
+  public WxCpMessageSendResult setScope(WxCpAgentScope agentScope) throws WxErrorException {
+    String url = "https://qyapi.weixin.qq.com/cgi-bin/agent/set_scope";
+    String responseContent = this.mainService.post(url, agentScope.toJson());
+    JsonObject jsonObject = JSON_PARSER.parse(responseContent).getAsJsonObject();
+    if (jsonObject.get("errcode").getAsInt() != 0) {
+      throw new WxErrorException(WxError.fromJson(responseContent));
+    }
+    return WxCpMessageSendResult.fromJson(responseContent);
   }
 
   @Override
