@@ -37,6 +37,9 @@ public class WxCpMessage implements Serializable {
   private String thumbMediaId;
   private String title;
   private String description;
+  private String appId;
+  private String page;
+  private Boolean emphasisFirstItem;
   private String musicUrl;
   private String hqMusicUrl;
   private String safe;
