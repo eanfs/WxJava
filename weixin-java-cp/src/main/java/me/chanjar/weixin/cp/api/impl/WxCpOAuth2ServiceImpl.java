@@ -66,6 +66,28 @@ public class WxCpOAuth2ServiceImpl implements WxCpOAuth2Service {
     return url.toString();
   }
 
+
+  @Override
+  public String buildQRConnectUrl(String state) {
+    return this.buildQRConnectUrl(
+      this.mainService.getWxCpConfigStorage().getOauth2redirectUri(),
+      state
+    );
+  }
+
+  @Override
+  public String buildQRConnectUrl(String redirectUri, String state) {
+    StringBuilder url = new StringBuilder("https://open.work.weixin.qq.com/wwopen/sso/qrConnect?");
+    url.append("appid=").append(this.mainService.getWxCpConfigStorage().getCorpId());
+    url.append("&agentid=").append(this.mainService.getWxCpConfigStorage().getAgentId());
+    url.append("&redirect_uri=").append(URIUtil.encodeURIComponent(redirectUri));
+
+    if (state != null) {
+      url.append("&state=").append(state);
+    }
+    return url.toString();
+  }
+
   @Override
   public WxCpOauth2UserInfo getUserInfo(String code) throws WxErrorException {
     return this.getUserInfo(this.mainService.getWxCpConfigStorage().getAgentId(), code);
