@@ -49,6 +49,29 @@ public interface WxCpOAuth2Service {
 
   /**
    * <pre>
+   * 构造独立窗口登录二维码的url连接
+   * 详情请见: http://qydev.weixin.qq.com/wiki/index.php?title=企业获取code
+   * </pre>
+   *
+   * @param state       状态码
+   * @return url
+   */
+  String buildQRConnectUrl(String state);
+
+  /**
+   * <pre>
+   * 构造独立窗口登录二维码的url连接
+   * 详情请见: http://qydev.weixin.qq.com/wiki/index.php?title=企业获取code
+   * </pre>
+   *
+   * @param redirectUri 跳转链接地址
+   * @param state       状态码
+   * @return url
+   */
+  String buildQRConnectUrl(String redirectUri, String state);
+
+  /**
+   * <pre>
    * 用oauth2获取用户信息
    * http://qydev.weixin.qq.com/wiki/index.php?title=根据code获取成员信息
    * 因为企业号oauth2.0必须在应用设置里设置通过ICP备案的可信域名，所以无法测试，因此这个方法很可能是坏的。
