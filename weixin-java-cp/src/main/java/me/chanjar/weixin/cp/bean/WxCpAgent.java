@@ -93,13 +93,17 @@ public class WxCpAgent implements Serializable {
   }
 
   @Data
-  public class Parties {
+  public class Parties implements Serializable {
+
+    private static final long serialVersionUID = 7436080283546308683L;
     @SerializedName("partyid")
     private List<Integer> partyIds = null;
   }
 
   @Data
-  public class Tags {
+  public class Tags implements Serializable {
+
+    private static final long serialVersionUID = 8879296541528450910L;
     @SerializedName("tagid")
     private List<Integer> tagIds = null;
   }
