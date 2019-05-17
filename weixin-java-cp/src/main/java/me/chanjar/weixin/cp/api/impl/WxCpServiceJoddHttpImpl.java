@@ -50,10 +50,15 @@ public class WxCpServiceJoddHttpImpl extends BaseWxCpServiceImpl<HttpConnectionP
       request.withConnectionProvider(httpClient);
       HttpResponse response = request.send();
 
-      String resultContent = response.bodyText();
-      WxError error = WxError.fromJson(resultContent, WxType.CP);
-      if (error.getErrorCode() != 0) {
-        throw new WxErrorException(error);
+          String resultContent = response.bodyText();
+          WxError error = WxError.fromJson(resultContent, WxType.CP);
+          if (error.getErrorCode() != 0) {
+            throw new WxErrorException(error);
+          }
+          WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
+          this.configStorage.updateAccessToken( this.configStorage.getAgentId(),
+            accessToken.getAccessToken(), accessToken.getExpiresIn());
+        }
       }
       WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
       this.configStorage.updateAccessToken(accessToken.getAccessToken(), accessToken.getExpiresIn());

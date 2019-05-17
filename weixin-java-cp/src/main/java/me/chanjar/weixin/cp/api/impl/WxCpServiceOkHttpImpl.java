@@ -62,6 +62,14 @@ public class WxCpServiceOkHttpImpl extends BaseWxCpServiceImpl<OkHttpClient, OkH
       WxError error = WxError.fromJson(resultContent, WxType.CP);
       if (error.getErrorCode() != 0) {
         throw new WxErrorException(error);
+          WxError error = WxError.fromJson(resultContent, WxType.CP);
+          if (error.getErrorCode() != 0) {
+            throw new WxErrorException(error);
+          }
+          WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
+          this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(),
+            accessToken.getExpiresIn());
+        }
       }
       WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
       this.configStorage.updateAccessToken(accessToken.getAccessToken(),
