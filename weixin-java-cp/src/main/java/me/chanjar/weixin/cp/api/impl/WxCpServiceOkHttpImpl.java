@@ -57,7 +57,7 @@ public class WxCpServiceOkHttpImpl extends WxCpServiceAbstractImpl<OkHttpClient,
             throw new WxErrorException(error);
           }
           WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
-          this.configStorage.updateAccessToken(accessToken.getAccessToken(),
+          this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(),
             accessToken.getExpiresIn());
         }
       }

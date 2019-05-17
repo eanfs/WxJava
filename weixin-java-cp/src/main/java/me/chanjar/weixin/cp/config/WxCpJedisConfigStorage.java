@@ -101,16 +101,16 @@ public class WxCpJedisConfigStorage implements WxCpConfigStorage {
   }
 
   @Override
-  public synchronized void updateAccessToken(WxAccessToken accessToken) {
-    this.updateAccessToken(accessToken.getAccessToken(), accessToken.getExpiresIn());
+  public synchronized void updateAccessToken(Integer agentId, WxAccessToken accessToken) {
+    this.updateAccessToken(agentId, accessToken.getAccessToken(), accessToken.getExpiresIn());
   }
 
   @Override
-  public synchronized void updateAccessToken(String accessToken, int expiresInSeconds) {
+  public synchronized void updateAccessToken(Integer agentId, String accessToken, int expiresInSeconds) {
     try (Jedis jedis = this.jedisPool.getResource()) {
-      jedis.set(ACCESS_TOKEN_KEY + this.agentId, accessToken);
+      jedis.set(ACCESS_TOKEN_KEY + agentId, accessToken);
 
-      jedis.set(ACCESS_TOKEN_EXPIRES_TIME_KEY + this.agentId,
+      jedis.set(ACCESS_TOKEN_EXPIRES_TIME_KEY + agentId,
         (System.currentTimeMillis() + (expiresInSeconds - 200) * 1000L) + "");
     }
   }

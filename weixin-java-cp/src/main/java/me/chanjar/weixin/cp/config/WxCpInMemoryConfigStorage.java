@@ -84,12 +84,13 @@ public class WxCpInMemoryConfigStorage implements WxCpConfigStorage {
   }
 
   @Override
-  public synchronized void updateAccessToken(WxAccessToken accessToken) {
-    updateAccessToken(accessToken.getAccessToken(), accessToken.getExpiresIn());
+  public void updateAccessToken(Integer agentId, WxAccessToken accessToken) {
+    updateAccessToken(agentId, accessToken.getAccessToken(), accessToken.getExpiresIn());
+
   }
 
   @Override
-  public synchronized void updateAccessToken(String accessToken, int expiresInSeconds) {
+  public void updateAccessToken(Integer agentId, String accessToken, int expiresInSeconds) {
     this.accessToken = accessToken;
     this.expiresTime = System.currentTimeMillis() + (expiresInSeconds - 200) * 1000L;
   }
