@@ -70,10 +70,9 @@ public class WxCpServiceOkHttpImpl extends BaseWxCpServiceImpl<OkHttpClient, OkH
           this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(),
             accessToken.getExpiresIn());
         }
-      }
-      WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
-      this.configStorage.updateAccessToken(accessToken.getAccessToken(),
-        accessToken.getExpiresIn());
+        WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
+          this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(),
+            accessToken.getExpiresIn());
     }
     return this.configStorage.getAccessToken();
   }
