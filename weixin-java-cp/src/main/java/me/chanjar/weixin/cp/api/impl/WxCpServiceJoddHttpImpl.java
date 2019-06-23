@@ -52,7 +52,7 @@ public class WxCpServiceJoddHttpImpl extends BaseWxCpServiceImpl<HttpConnectionP
         throw new WxErrorException(error);
       }
       WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
-      this.configStorage.updateAccessToken(accessToken.getAccessToken(), accessToken.getExpiresIn());
+      this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(), accessToken.getExpiresIn());
     }
     return this.configStorage.getAccessToken();
   }
