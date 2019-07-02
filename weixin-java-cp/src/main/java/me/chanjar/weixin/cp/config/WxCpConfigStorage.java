@@ -12,6 +12,14 @@ import java.io.File;
  */
 public interface WxCpConfigStorage {
 
+  String getSuiteVerifyTicket(String suiteId);
+
+  String getSuiteAccessToken(String suiteId);
+
+  void updateSuiteVerifyTicket(String suiteId, String ticket, int expiresIn);
+
+  void updateSuiteAccessToken(String authCorpId, String accessToken, int expiresIn);
+
   String getAccessToken();
 
   boolean isAccessTokenExpired();
@@ -21,9 +29,9 @@ public interface WxCpConfigStorage {
    */
   void expireAccessToken();
 
-  void updateAccessToken(WxAccessToken accessToken);
+  void updateAccessToken(Integer agentId, WxAccessToken accessToken);
 
-  void updateAccessToken(String accessToken, int expiresIn);
+  void updateAccessToken(Integer agentId, String accessToken, int expiresIn);
 
   String getJsapiTicket();
 
@@ -36,10 +44,22 @@ public interface WxCpConfigStorage {
 
   /**
    * 应该是线程安全的
-   *
-   * @param jsapiTicket
    */
   void updateJsapiTicket(String jsapiTicket, int expiresInSeconds);
+
+  String getAgentJsapiTicket();
+
+  boolean isAgentJsapiTicketExpired();
+
+  /**
+   * 强制将jsapi ticket过期掉
+   */
+  void expireAgentJsapiTicket();
+
+  /**
+   * 应该是线程安全的
+   */
+  void updateAgentJsapiTicket(String jsapiTicket, int expiresInSeconds);
 
   String getCorpId();
 
@@ -64,6 +84,8 @@ public interface WxCpConfigStorage {
   String getHttpProxyPassword();
 
   File getTmpDirFile();
+
+
 
   /**
    * http client builder

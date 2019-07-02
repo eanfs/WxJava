@@ -1,8 +1,15 @@
 package me.chanjar.weixin.cp.config;
 
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Map;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import me.chanjar.weixin.common.bean.WxAccessToken;
-import me.chanjar.weixin.common.util.ToStringUtils;
 import me.chanjar.weixin.common.util.http.apache.ApacheHttpClientBuilder;
+import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 
 import java.io.File;
 
@@ -12,6 +19,9 @@ import java.io.File;
  * @author Daniel Qian
  */
 public class WxCpInMemoryConfigStorage implements WxCpConfigStorage {
+
+  protected volatile Map<String, String> suiteVerifyTickets = new Hashtable<>();
+  protected volatile Map<String, String> suiteAccessTokens = new Hashtable<>();
 
   protected volatile String corpId;
   protected volatile String corpSecret;
@@ -32,9 +42,32 @@ public class WxCpInMemoryConfigStorage implements WxCpConfigStorage {
   protected volatile String jsapiTicket;
   protected volatile long jsapiTicketExpiresTime;
 
+  protected volatile String agentJsapiTicket;
+  protected volatile long agentJsapiTicketExpiresTime;
+
   protected volatile File tmpDirFile;
 
   private volatile ApacheHttpClientBuilder apacheHttpClientBuilder;
+
+  @Override
+  public String getSuiteVerifyTicket(String suiteId) {
+    return suiteVerifyTickets.get(suiteId);
+  }
+
+  @Override
+  public String getSuiteAccessToken(String suiteId) {
+    return suiteAccessTokens.get(suiteId);
+  }
+
+  @Override
+  public void updateSuiteVerifyTicket(String suiteId, String ticket, int expiresIn) {
+    suiteVerifyTickets.put(suiteId, ticket);
+  }
+
+  @Override
+  public void updateSuiteAccessToken(String authCorpId, String accessToken, int expiresIn) {
+    suiteAccessTokens.put(authCorpId, accessToken);
+  }
 
   @Override
   public String getAccessToken() {
@@ -56,12 +89,13 @@ public class WxCpInMemoryConfigStorage implements WxCpConfigStorage {
   }
 
   @Override
-  public synchronized void updateAccessToken(WxAccessToken accessToken) {
-    updateAccessToken(accessToken.getAccessToken(), accessToken.getExpiresIn());
+  public void updateAccessToken(Integer agentId, WxAccessToken accessToken) {
+    updateAccessToken(agentId, accessToken.getAccessToken(), accessToken.getExpiresIn());
+
   }
 
   @Override
-  public synchronized void updateAccessToken(String accessToken, int expiresInSeconds) {
+  public void updateAccessToken(Integer agentId, String accessToken, int expiresInSeconds) {
     this.accessToken = accessToken;
     this.expiresTime = System.currentTimeMillis() + (expiresInSeconds - 200) * 1000L;
   }
@@ -93,6 +127,28 @@ public class WxCpInMemoryConfigStorage implements WxCpConfigStorage {
     this.jsapiTicket = jsapiTicket;
     // 预留200秒的时间
     this.jsapiTicketExpiresTime = System.currentTimeMillis() + (expiresInSeconds - 200) * 1000L;
+  }
+
+  @Override
+  public String getAgentJsapiTicket() {
+    return this.agentJsapiTicket;
+  }
+
+  @Override
+  public boolean isAgentJsapiTicketExpired() {
+    return System.currentTimeMillis() > this.agentJsapiTicketExpiresTime;
+  }
+
+  @Override
+  public void expireAgentJsapiTicket() {
+    this.agentJsapiTicketExpiresTime = 0;
+  }
+
+  @Override
+  public void updateAgentJsapiTicket(String jsapiTicket, int expiresInSeconds) {
+    this.agentJsapiTicket = jsapiTicket;
+    // 预留200秒的时间
+    this.agentJsapiTicketExpiresTime = System.currentTimeMillis() + (expiresInSeconds - 200) * 1000L;
   }
 
   @Override
@@ -201,7 +257,7 @@ public class WxCpInMemoryConfigStorage implements WxCpConfigStorage {
 
   @Override
   public String toString() {
-    return ToStringUtils.toSimpleString(this);
+    return WxCpGsonBuilder.create().toJson(this);
   }
 
   @Override

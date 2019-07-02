@@ -1,9 +1,19 @@
 package me.chanjar.weixin.cp.api.impl;
 
+import java.util.List;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
+import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.cp.api.WxCpAgentService;
 import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.bean.WxCpAgent;
+import me.chanjar.weixin.cp.bean.WxCpAgentScope;
+import me.chanjar.weixin.cp.bean.WxCpMessageSendResult;
+import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 
 
 /**
@@ -15,6 +25,8 @@ import me.chanjar.weixin.cp.bean.WxCpAgent;
  * @author <a href="https://github.com/huansinho">huansinho</a>
  */
 public class WxCpAgentServiceImpl implements WxCpAgentService {
+  private static final JsonParser JSON_PARSER = new JsonParser();
+
   private WxCpService mainService;
 
   public WxCpAgentServiceImpl(WxCpService mainService) {
@@ -23,15 +35,47 @@ public class WxCpAgentServiceImpl implements WxCpAgentService {
 
   @Override
   public WxCpAgent get(Integer agentId) throws WxErrorException {
-
-    String url = "https://qyapi.weixin.qq.com/cgi-bin/agent/get";
-    if (agentId != null) {
-      url += "?agentid=" + agentId;
-    } else {
+    if (agentId == null) {
       throw new IllegalArgumentException("缺少agentid参数");
     }
+
+    String url = "https://qyapi.weixin.qq.com/cgi-bin/agent/get?agentid=" + agentId;
     String responseContent = this.mainService.get(url, null);
     return WxCpAgent.fromJson(responseContent);
+  }
+
+  @Override
+  public void set(WxCpAgent agentInfo) throws WxErrorException {
+    String url = "https://qyapi.weixin.qq.com/cgi-bin/agent/set";
+    String responseContent = this.mainService.post(url, agentInfo.toJson());
+    JsonObject jsonObject = JSON_PARSER.parse(responseContent).getAsJsonObject();
+    if (jsonObject.get("errcode").getAsInt() != 0) {
+      throw new WxErrorException(WxError.fromJson(responseContent));
+    }
+  }
+
+  @Override
+  public WxCpMessageSendResult setScope(WxCpAgentScope agentScope) throws WxErrorException {
+    String url = "https://qyapi.weixin.qq.com/cgi-bin/agent/set_scope";
+    String responseContent = this.mainService.post(url, agentScope.toJson());
+    JsonObject jsonObject = JSON_PARSER.parse(responseContent).getAsJsonObject();
+    if (jsonObject.get("errcode").getAsInt() != 0) {
+      throw new WxErrorException(WxError.fromJson(responseContent));
+    }
+    return WxCpMessageSendResult.fromJson(responseContent);
+  }
+
+  @Override
+  public List<WxCpAgent> list() throws WxErrorException {
+    String url = "https://qyapi.weixin.qq.com/cgi-bin/agent/list";
+    String responseContent = this.mainService.get(url, null);
+    JsonObject jsonObject = JSON_PARSER.parse(responseContent).getAsJsonObject();
+    if (jsonObject.get("errcode").getAsInt() != 0) {
+      throw new WxErrorException(WxError.fromJson(responseContent));
+    }
+
+    return WxCpGsonBuilder.create().fromJson(jsonObject.get("agentlist").toString(), new TypeToken<List<WxCpAgent>>() {
+    }.getType());
   }
 
 }

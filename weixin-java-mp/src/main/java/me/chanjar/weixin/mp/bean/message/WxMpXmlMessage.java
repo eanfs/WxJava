@@ -3,17 +3,21 @@ package me.chanjar.weixin.mp.bean.message;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
-import me.chanjar.weixin.common.util.ToStringUtils;
+import me.chanjar.weixin.common.util.XmlUtils;
 import me.chanjar.weixin.common.util.xml.XStreamCDataConverter;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.util.crypto.WxMpCryptUtil;
+import me.chanjar.weixin.mp.util.json.WxMpGsonBuilder;
 import me.chanjar.weixin.mp.util.xml.XStreamTransformer;
 
 /**
@@ -26,10 +30,16 @@ import me.chanjar.weixin.mp.util.xml.XStreamTransformer;
  *
  * @author chanjarster
  */
-@XStreamAlias("xml")
 @Data
+@Slf4j
+@XStreamAlias("xml")
 public class WxMpXmlMessage implements Serializable {
   private static final long serialVersionUID = -3586245291677274914L;
+
+  /**
+   * 使用dom4j解析的存放所有xml属性和值的map.
+   */
+  private Map<String, Object> allFieldsMap;
 
   ///////////////////////
   // 以下都是微信推送过来的消息的xml的element所对应的属性
@@ -125,6 +135,10 @@ public class WxMpXmlMessage implements Serializable {
   @XStreamAlias("Recognition")
   @XStreamConverter(value = XStreamCDataConverter.class)
   private String recognition;
+
+  @XStreamAlias("UnionId")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String unionId;
 
   ///////////////////////////////////////
   // 群发消息返回的结果
@@ -339,6 +353,82 @@ public class WxMpXmlMessage implements Serializable {
   @XStreamAlias("SendLocationInfo")
   private SendLocationInfo sendLocationInfo = new SendLocationInfo();
 
+  /**
+   * 审核不通过原因
+   */
+  @XStreamAlias("RefuseReason")
+  private String refuseReason;
+
+  /**
+   * 是否为朋友推荐，0代表否，1代表是
+   */
+  @XStreamAlias("IsRecommendByFriend")
+  private String isRecommendByFriend;
+
+  /**
+   * 购买券点时，实际支付成功的时间
+   */
+  @XStreamAlias("PayFinishTime")
+  private String payFinishTime;
+
+  /**
+   * 购买券点时，支付二维码的生成时间
+   */
+  @XStreamAlias("CreateOrderTime")
+  private String createOrderTime;
+
+  /**
+   * 购买券点时，支付二维码的生成时间
+   */
+  @XStreamAlias("Desc")
+  private String desc;
+
+  /**
+   * 剩余免费券点数量
+   */
+  @XStreamAlias("FreeCoinCount")
+  private String freeCoinCount;
+
+  /**
+   * 剩余付费券点数量
+   */
+  @XStreamAlias("PayCoinCount")
+  private String payCoinCount;
+
+  /**
+   * 本次变动的免费券点数量
+   */
+  @XStreamAlias("RefundFreeCoinCount")
+  private String refundFreeCoinCount;
+
+  /**
+   * 本次变动的付费券点数量
+   */
+  @XStreamAlias("RefundPayCoinCount")
+  private String refundPayCoinCount;
+
+  /**
+   * <pre>
+   *    所要拉取的订单类型 ORDER_TYPE_SYS_ADD 平台赠送券点 ORDER_TYPE_WXPAY 充值券点 ORDER_TYPE_REFUND 库存未使用回退券点
+   *    ORDER_TYPE_REDUCE 券点兑换库存 ORDER_TYPE_SYS_REDUCE 平台扣减
+   * </pre>
+   */
+  @XStreamAlias("OrderType")
+  private String orderType;
+
+  /**
+   * 系统备注，说明此次变动的缘由，如开通账户奖励、门店奖励、核销奖励以及充值、扣减。
+   */
+  @XStreamAlias("Memo")
+  private String memo;
+
+  /**
+   * 所开发票的详情
+   */
+  @XStreamAlias("ReceiptInfo")
+  private String receiptInfo;
+
+
   ///////////////////////////////////////
   // 门店审核事件推送
   ///////////////////////////////////////
@@ -356,6 +446,8 @@ public class WxMpXmlMessage implements Serializable {
 
   /**
    * 审核结果，成功succ 或失败fail.
+   *
+   * 在商品审核结果推送时，verify_ok表示审核通过，verify_not_pass表示审核未通过。
    */
   @XStreamAlias("Result")
   private String result;
@@ -462,10 +554,89 @@ public class WxMpXmlMessage implements Serializable {
   @XStreamAlias("DeviceStatus")
   private Integer deviceStatus;
 
+  ///////////////////////////////////////
+  // 小程序 审核事件
+  ///////////////////////////////////////
+  /**
+   * 审核成功时的时间（整形），时间戳
+   */
+  @XStreamAlias("SuccTime")
+  private Long succTime;
+
+  /**
+   * 审核失败的原因
+   */
+  @XStreamAlias("Reason")
+  private String reason;
+
+  ///////////////////////////////////////
+  // 扫一扫事件推送
+  ///////////////////////////////////////
+  /**
+   * 商品编码标准
+   */
+  @XStreamAlias("KeyStandard")
+  private String keyStandard;
+  /**
+   * 商品编码内容
+   */
+  @XStreamAlias("KeyStr")
+  private String keyStr;
+
+  /**
+   * 用户在微信内设置的国家
+   */
+  @XStreamAlias("Country")
+  private String country;
+
+  /**
+   * 用户在微信内设置的省份
+   */
+  @XStreamAlias("Province")
+  private String province;
+
+  /**
+   * 用户在微信内设置的城市
+   */
+  @XStreamAlias("City")
+  private String city;
+
+  /**
+   * 用户的性别，1为男性，2为女性，0代表未知
+   */
+  @XStreamAlias("Sex")
+  private String sex;
+
+  /**
+   * 打开商品主页的场景，1为扫码，2为其他打开场景（如会话、收藏或朋友圈）
+   */
+  @XStreamAlias("Scene")
+  private String scene;
+
+  /**
+   * 调用“获取商品二维码接口”时传入的extinfo，为标识参数
+   */
+  @XStreamAlias("ExtInfo")
+  private String extInfo;
+
+  /**
+   * 用户的实时地理位置信息（目前只精确到省一级），可在国家统计局网站查到对应明细： http://www.stats.gov.cn/tjsj/tjbz/xzqhdm/201504/t20150415_712722.html
+   */
+  @XStreamAlias("RegionCode")
+  private String regionCode;
+
+  /**
+   * 审核未通过的原因。
+   */
+  @XStreamAlias("ReasonMsg")
+  private String reasonMsg;
+
   public static WxMpXmlMessage fromXml(String xml) {
     //修改微信变态的消息内容格式，方便解析
     xml = xml.replace("</PicList><PicList>", "");
-    return XStreamTransformer.fromXml(WxMpXmlMessage.class, xml);
+    final WxMpXmlMessage xmlMessage = XStreamTransformer.fromXml(WxMpXmlMessage.class, xml);
+    xmlMessage.setAllFieldsMap(XmlUtils.xml2Map(xml));
+    return xmlMessage;
   }
 
   public static WxMpXmlMessage fromXml(InputStream is) {
@@ -481,17 +652,18 @@ public class WxMpXmlMessage implements Serializable {
    * @param nonce             随机串
    * @param msgSignature      签名串
    */
-  public static WxMpXmlMessage fromEncryptedXml(String encryptedXml, WxMpConfigStorage wxMpConfigStorage, String timestamp,
-                                                String nonce, String msgSignature) {
+  public static WxMpXmlMessage fromEncryptedXml(String encryptedXml, WxMpConfigStorage wxMpConfigStorage,
+                                                String timestamp, String nonce, String msgSignature) {
     WxMpCryptUtil cryptUtil = new WxMpCryptUtil(wxMpConfigStorage);
     String plainText = cryptUtil.decrypt(msgSignature, timestamp, nonce, encryptedXml);
+    log.debug("解密后的原始xml消息内容：{}", plainText);
     return fromXml(plainText);
   }
 
   public static WxMpXmlMessage fromEncryptedXml(InputStream is, WxMpConfigStorage wxMpConfigStorage, String timestamp,
                                                 String nonce, String msgSignature) {
     try {
-      return fromEncryptedXml(IOUtils.toString(is, "UTF-8"), wxMpConfigStorage, timestamp, nonce, msgSignature);
+      return fromEncryptedXml(IOUtils.toString(is, StandardCharsets.UTF_8), wxMpConfigStorage, timestamp, nonce, msgSignature);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -530,7 +702,7 @@ public class WxMpXmlMessage implements Serializable {
 
   @Override
   public String toString() {
-    return ToStringUtils.toSimpleString(this);
+    return WxMpGsonBuilder.create().toJson(this);
   }
 
 }
