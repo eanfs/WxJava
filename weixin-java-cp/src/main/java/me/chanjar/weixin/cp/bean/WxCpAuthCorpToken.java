@@ -17,6 +17,8 @@ public class WxCpAuthCorpToken implements Serializable {
   @SerializedName(value = "access_token")
   private String accessToken;
 
+  @SerializedName(value = "expires_in")
+  private Integer expiresIn;
 
   public static WxCpAuthCorpToken fromJson(String json) {
     return WxCpGsonBuilder.create().fromJson(json, WxCpAuthCorpToken.class);
