@@ -1,40 +1,23 @@
 package me.chanjar.weixin.cp.api;
 
 import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.cp.bean.WxCpAuthInfo;
-import me.chanjar.weixin.cp.bean.WxCpUserDetail;
-import me.chanjar.weixin.cp.bean.message.SuiteTicketXmlMessage;
+import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 
-/**
- * <pre>
- *  企业微信 第三方应用接口
- *  Created by Lirichen on 2018/11/19.
- * </pre>
- *
- * @author <a href="https://github.com/eanfs">Binary Wang</a>
- */
 public interface WxCpSuiteService {
 
-  String SUITE_AUTH_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_suite_token";
-  String PRE_AUTH_CODE_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_pre_auth_code";
-  String SESSEION_INFO_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/set_session_info";
-  String PERMANENT_CODE_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_permanent_code";
-  String AUTH_INFO_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_auth_info";
-  String CORP_TOKEN_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_corp_token";
+  WxCpSuiteComponentService getWxCpSuiteComponentService();
 
-  String route(SuiteTicketXmlMessage wxMessage) throws WxErrorException;
+  WxCpSuiteConfigStorage getWxCpSuiteConfigStorage();
 
+  void setWxCpSuiteConfigStorage(WxCpSuiteConfigStorage wxCpSuiteConfigStorage);
 
-  String getSuiteAccessToken(boolean forceRefresh) throws WxErrorException;
+  /**
+   * 当本Service没有实现某个API的时候，可以用这个，针对所有微信API中的GET请求
+   */
+  String get(String url, String queryParam) throws WxErrorException;
 
-  String getPreAuthCode(String suiteAccessToken) throws WxErrorException;
-
-  String getSessionInfo(String suiteAccessToken) throws WxErrorException;
-
-  WxCpAuthInfo getPermanentCode(String suiteAccessToken, String authCode) throws WxErrorException;
-
-  WxCpAuthInfo getAuthInfo(String suiteAccessToken, String authCorpId, String permanentCode) throws WxErrorException;
-
-  String getCorpToken(String suiteAccessToken, String authCorpId, String permanentCode) throws WxErrorException;
-
+  /**
+   * 当本Service没有实现某个API的时候，可以用这个，针对所有微信API中的POST请求
+   */
+  String post(String url, String postData) throws WxErrorException;
 }
