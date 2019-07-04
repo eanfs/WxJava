@@ -2,7 +2,6 @@ package me.chanjar.weixin.cp.api;
 
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.cp.bean.WxCpAuthInfo;
-import me.chanjar.weixin.cp.bean.WxCpUserDetail;
 import me.chanjar.weixin.cp.bean.message.SuiteTicketXmlMessage;
 import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 
@@ -33,11 +32,11 @@ public interface WxCpSuiteComponentService {
 
   String getSessionInfo() throws WxErrorException;
 
-  WxCpAuthInfo getPermanentCode(String authCode) throws WxErrorException;
+  WxCpAuthInfo getPermanentCode(String authCorpId) throws WxErrorException;
 
   WxCpAuthInfo getAuthInfo(String authCorpId, String permanentCode) throws WxErrorException;
 
-  String getCorpToken(String authCorpId, String permanentCode) throws WxErrorException;
+  String getAuthCorpAccessToken(String authCorpId) throws WxErrorException;
 
   WxCpService getWxCpServiceByAuthCorpId(String authCorpId);
 

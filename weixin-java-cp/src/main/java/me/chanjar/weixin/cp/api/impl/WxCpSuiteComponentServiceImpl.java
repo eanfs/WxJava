@@ -40,6 +40,10 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
    */
   protected final Object globalAccessTokenRefreshLock = new Object();
 
+  protected final Object globalPermanentCodeLock = new Object();
+
+  protected final Object globalAuthCorpAccesstokenLock = new Object();
+
   public WxCpSuiteComponentServiceImpl(WxCpSuiteService mainService) {
     this.mainService = mainService;
   }
@@ -75,7 +79,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
         jsonObject.addProperty("suite_id", this.getWxCpSuiteConfigStorage().getSuiteId());
         jsonObject.addProperty("suite_secret", this.getWxCpSuiteConfigStorage().getSuiteSecret());
         jsonObject.addProperty("suite_ticket", this.getWxCpSuiteConfigStorage().getSuiteVerifyTicket());
-        String resultContent = mainService.get(SUITE_AUTH_URL, jsonObject.getAsString());
+        String resultContent = post(SUITE_AUTH_URL, jsonObject.getAsString());
         WxError error = WxError.fromJson(resultContent, WxType.CP);
         if (error.getErrorCode() != 0) {
           throw new WxErrorException(error);
@@ -91,9 +95,9 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
 
   @Override
   public String getPreAuthCode() throws WxErrorException {
-    JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("suite_access_token", this.getWxCpSuiteConfigStorage().getSuiteAccessToken());
-    String resultContent = mainService.get(PRE_AUTH_CODE_URL, jsonObject.getAsString());
+//    JsonObject jsonObject = new JsonObject();
+//    jsonObject.addProperty("suite_access_token", this.getWxCpSuiteConfigStorage().getSuiteAccessToken());
+    String resultContent = get(PRE_AUTH_CODE_URL);
     WxError error = WxError.fromJson(resultContent, WxType.CP);
     if (error.getErrorCode() != 0) {
       throw new WxErrorException(error);
@@ -108,28 +112,38 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   }
 
   @Override
-  public WxCpAuthInfo getPermanentCode(String authCode) throws WxErrorException {
-    String url = PERMANENT_CODE_URL
-      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
-    JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("auth_code", authCode);
-    String resultContent = mainService.post(url, jsonObject.getAsString());
-    WxError error = WxError.fromJson(resultContent, WxType.CP);
-    if (error.getErrorCode() != 0) {
-      throw new WxErrorException(error);
+  public WxCpAuthInfo getPermanentCode(String authCorpId) throws WxErrorException {
+    WxCpAuthInfo authInfo;
+    synchronized (this.globalPermanentCodeLock) {
+      String permanentCode = this.getWxCpSuiteConfigStorage().getAuthCorpPermanentCode(authCorpId);
+
+      if (StringUtils.isEmpty(permanentCode)) {
+        final String url = PERMANENT_CODE_URL;
+//      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("auth_code", this.getPreAuthCode());
+        String resultContent = post(url, jsonObject.getAsString());
+        WxError error = WxError.fromJson(resultContent, WxType.CP);
+        if (error.getErrorCode() != 0) {
+          throw new WxErrorException(error);
+        }
+        authInfo = WxCpAuthInfo.fromJson(resultContent);
+      } else {
+        authInfo = getAuthInfo(authCorpId, permanentCode);
+      }
     }
-    WxCpAuthInfo authInfo = WxCpAuthInfo.fromJson(resultContent);
+
     return authInfo;
   }
 
   @Override
   public WxCpAuthInfo getAuthInfo(String authCorpId, String permanentCode) throws WxErrorException {
-    String url = AUTH_INFO_URL
-      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
+    final String url = AUTH_INFO_URL;
+//      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("auth_corpid", authCorpId);
     jsonObject.addProperty("permanent_code", permanentCode);
-    String resultContent = mainService.post(url, jsonObject.getAsString());
+    String resultContent = post(url, jsonObject.getAsString());
     WxError error = WxError.fromJson(resultContent, WxType.CP);
     if (error.getErrorCode() != 0) {
       throw new WxErrorException(error);
@@ -139,19 +153,21 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   }
 
   @Override
-  public String getCorpToken(String authCorpId, String permanentCode) throws WxErrorException {
-    String url = CORP_TOKEN_URL
-      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
+  public String getAuthCorpAccessToken(String authCorpId) throws WxErrorException {
+    final String url = CORP_TOKEN_URL;
+//      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
+
+    WxCpAuthInfo authInfo = getPermanentCode(authCorpId);
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("auth_corpid", authCorpId);
-    jsonObject.addProperty("permanent_code", permanentCode);
-    String resultContent = mainService.post(url, jsonObject.getAsString());
+    jsonObject.addProperty("permanent_code", authInfo.getPermanentCode());
+    String resultContent = post(url, jsonObject.getAsString());
     WxError error = WxError.fromJson(resultContent, WxType.CP);
     if (error.getErrorCode() != 0) {
       throw new WxErrorException(error);
     }
-    WxCpAuthCorpToken authInfo = WxCpAuthCorpToken.fromJson(resultContent);
-    return authInfo.getAccessToken();
+    WxCpAuthCorpToken authCorpToken = WxCpAuthCorpToken.fromJson(resultContent);
+    return authCorpToken.getAccessToken();
   }
 
   @Override
@@ -173,13 +189,12 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   @Override
   public String getAuthCorpAccessToken(String authCorpId, boolean forceRefresh) throws WxErrorException {
     if (this.getWxCpSuiteConfigStorage().isAuthCorpAccessTokenExpired(authCorpId) || forceRefresh) {
-      String url = CORP_TOKEN_URL
-        + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
+      final String url = CORP_TOKEN_URL;
       String permanentCode = this.getWxCpSuiteConfigStorage().getAuthCorpPermanentCode(authCorpId);
       JsonObject jsonObject = new JsonObject();
       jsonObject.addProperty("auth_corpid", authCorpId);
       jsonObject.addProperty("permanent_code", permanentCode);
-      String resultContent = mainService.post(url, jsonObject.getAsString());
+      String resultContent = post(url, jsonObject.getAsString());
       WxError error = WxError.fromJson(resultContent, WxType.CP);
       if (error.getErrorCode() != 0) {
         throw new WxErrorException(error);
@@ -191,5 +206,70 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
       getWxCpSuiteConfigStorage().updateAuthCorpAccessToken(authCorpId, authCorpAccessToken, authInfo.getExpiresIn());
     }
     return this.getWxCpSuiteConfigStorage().getAuthCorpAccessToken(authCorpId);
+  }
+
+
+  public WxCpSuiteService getWxCpSuiteService() {
+    return this.mainService;
+  }
+
+  private String post(String uri, String postData) throws WxErrorException {
+    return post(uri, postData, "suite_access_token");
+  }
+
+  private String post(String uri, String postData, String accessTokenKey) throws WxErrorException {
+    String componentAccessToken = getSuiteAccessToken(false);
+    String uriWithComponentAccessToken = uri + (uri.contains("?") ? "&" : "?") + accessTokenKey + "=" + componentAccessToken;
+    try {
+      return getWxCpSuiteService().post(uriWithComponentAccessToken, postData);
+    } catch (WxErrorException e) {
+      WxError error = e.getError();
+      /*
+       * 发生以下情况时尝试刷新access_token
+       * 40001 获取access_token时AppSecret错误，或者access_token无效
+       * 42001 access_token超时
+       * 40014 不合法的access_token，请开发者认真比对access_token的有效性（如是否过期），或查看是否正在为恰当的公众号调用接口
+       */
+      if (error.getErrorCode() == 42001 || error.getErrorCode() == 40001 || error.getErrorCode() == 40014) {
+        // 强制设置wxMpConfigStorage它的access token过期了，这样在下一次请求里就会刷新access token
+        this.getWxCpSuiteConfigStorage().expireSuiteAccessToken();
+        return this.post(uri, postData, accessTokenKey);
+
+      }
+      if (error.getErrorCode() != 0) {
+        throw new WxErrorException(error, e);
+      }
+      return null;
+    }
+  }
+
+  private String get(String uri) throws WxErrorException {
+    return get(uri, "suite_access_token");
+  }
+
+  private String get(String uri, String accessTokenKey) throws WxErrorException {
+    String componentAccessToken = getSuiteAccessToken(false);
+    String uriWithComponentAccessToken = uri + (uri.contains("?") ? "&" : "?") + accessTokenKey + "=" + componentAccessToken;
+    try {
+      return getWxCpSuiteService().get(uriWithComponentAccessToken, null);
+    } catch (WxErrorException e) {
+      WxError error = e.getError();
+      /*
+       * 发生以下情况时尝试刷新access_token
+       * 40001 获取access_token时AppSecret错误，或者access_token无效
+       * 42001 access_token超时
+       * 40014 不合法的access_token，请开发者认真比对access_token的有效性（如是否过期），或查看是否正在为恰当的公众号调用接口
+       */
+      if (error.getErrorCode() == 42001 || error.getErrorCode() == 40001 || error.getErrorCode() == 40014) {
+        // 强制设置wxMpConfigStorage它的access token过期了，这样在下一次请求里就会刷新access token
+        this.getWxCpSuiteConfigStorage().expireSuiteAccessToken();
+        return this.get(uri, accessTokenKey);
+
+      }
+      if (error.getErrorCode() != 0) {
+        throw new WxErrorException(error, e);
+      }
+      return null;
+    }
   }
 }
