@@ -142,7 +142,12 @@ public class WxCpMessageRouter {
    * @param wxMessage
    * @param context
    */
-  public WxCpXmlOutMessage route(final WxCpXmlMessage wxMessage, final Map<String, Object> context) {
+  public WxCpXmlOutMessage route(final WxCpXmlMessage wxMessage, final Map<String, Object> context, WxCpService wxCpService) {
+    if (wxCpService == null) {
+      wxCpService = this.wxCpService;
+    }
+
+    final WxCpService mpService = wxCpService;
     if (isDuplicateMessage(wxMessage)) {
       // 如果是重复消息，那么就不做处理
       return null;
@@ -172,12 +177,12 @@ public class WxCpMessageRouter {
           this.executorService.submit(new Runnable() {
             @Override
             public void run() {
-              rule.service(wxMessage, context, WxCpMessageRouter.this.wxCpService, WxCpMessageRouter.this.sessionManager, WxCpMessageRouter.this.exceptionHandler);
+              rule.service(wxMessage, context, mpService, WxCpMessageRouter.this.sessionManager, WxCpMessageRouter.this.exceptionHandler);
             }
           })
         );
       } else {
-        res = rule.service(wxMessage, context, this.wxCpService, this.sessionManager, this.exceptionHandler);
+        res = rule.service(wxMessage, context, mpService, this.sessionManager, this.exceptionHandler);
         // 在同步操作结束，session访问结束
         this.log.debug("End session access: async=false, sessionId={}", wxMessage.getFromUserName());
         sessionEndAccess(wxMessage);
@@ -207,6 +212,15 @@ public class WxCpMessageRouter {
     return res;
   }
 
+  /**
+   * 处理微信消息
+   *
+   * @param wxMessage
+   * @param context
+   */
+  public WxCpXmlOutMessage route(final WxCpXmlMessage wxMessage, final Map<String, Object> context) {
+    return route(wxMessage, context, null);
+  }
 
   /**
    * 处理微信消息.
