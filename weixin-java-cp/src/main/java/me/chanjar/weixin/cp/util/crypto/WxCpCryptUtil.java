@@ -23,6 +23,7 @@ package me.chanjar.weixin.cp.util.crypto;
 
 import me.chanjar.weixin.common.util.crypto.WxCryptUtil;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
+import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 import org.apache.commons.codec.binary.Base64;
 
 public class WxCpCryptUtil extends WxCryptUtil {
@@ -44,6 +45,27 @@ public class WxCpCryptUtil extends WxCryptUtil {
 
     this.token = token;
     this.appidOrCorpid = corpId;
+    this.aesKey = Base64.decodeBase64(encodingAesKey + "=");
+  }
+
+
+  /**
+   * 构造函数
+   *
+   * @param wxCpSuiteConfigStorage
+   */
+  public WxCpCryptUtil(WxCpSuiteConfigStorage wxCpSuiteConfigStorage) {
+    /*
+     * @param token          公众平台上，开发者设置的token
+     * @param encodingAesKey 公众平台上，开发者设置的EncodingAESKey
+     * @param appidOrCorpid          公众平台appid
+     */
+    String encodingAesKey = wxCpSuiteConfigStorage.getSuiteAesKey();
+    String token = wxCpSuiteConfigStorage.getSuiteToken();
+    String suiteId = wxCpSuiteConfigStorage.getSuiteId();
+
+    this.token = token;
+    this.appidOrCorpid = suiteId;
     this.aesKey = Base64.decodeBase64(encodingAesKey + "=");
   }
 

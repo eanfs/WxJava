@@ -2,6 +2,7 @@ package me.chanjar.weixin.cp.api.impl;
 
 import java.io.IOException;
 
+import me.chanjar.weixin.common.util.crypto.SHA1;
 import me.chanjar.weixin.cp.api.WxCpSuiteComponentService;
 import me.chanjar.weixin.cp.api.WxCpSuiteService;
 import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
@@ -41,6 +42,16 @@ public abstract class WxCpSuiteServiceAbstractImpl<H, P> implements WxCpSuiteSer
    * 初始化 RequestHttp.
    */
   public abstract void initHttp();
+
+  public boolean checkSignature(String msgSignature, String timestamp, String nonce, String data) {
+    try {
+      return SHA1.gen(getWxCpSuiteConfigStorage().getSuiteToken(), timestamp, nonce, data)
+        .equals(msgSignature);
+    } catch (Exception e) {
+      this.log.error("Checking signature failed, and the reason is :" + e.getMessage());
+      return false;
+    }
+  }
 
   protected synchronized <T, E> T execute(RequestExecutor<T, E> executor, String uri, E data) throws WxErrorException {
     try {

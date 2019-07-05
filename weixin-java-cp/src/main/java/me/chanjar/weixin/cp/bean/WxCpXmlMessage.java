@@ -9,6 +9,7 @@ import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.util.XmlUtils;
 import me.chanjar.weixin.common.util.xml.XStreamCDataConverter;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
+import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 import me.chanjar.weixin.cp.util.crypto.WxCpCryptUtil;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 import me.chanjar.weixin.cp.util.xml.XStreamTransformer;
@@ -417,6 +418,26 @@ public class WxCpXmlMessage implements Serializable {
   }
 
   public static WxCpXmlMessage fromEncryptedXml(InputStream is, WxCpConfigStorage wxCpConfigStorage,
+                                                String timestamp, String nonce, String msgSignature) {
+    try {
+      return fromEncryptedXml(IOUtils.toString(is, StandardCharsets.UTF_8), wxCpConfigStorage, timestamp, nonce, msgSignature);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * 从加密字符串转换.
+   */
+  public static WxCpXmlMessage fromEncryptedXml(String encryptedXml, WxCpSuiteConfigStorage wxCpConfigStorage,
+                                                String timestamp, String nonce, String msgSignature) {
+    WxCpCryptUtil cryptUtil = new WxCpCryptUtil(wxCpConfigStorage);
+    String plainText = cryptUtil.decrypt(msgSignature, timestamp, nonce, encryptedXml);
+    log.debug("解密后的原始xml消息内容：{}", plainText);
+    return fromXml(plainText);
+  }
+
+  public static WxCpXmlMessage fromEncryptedXml(InputStream is, WxCpSuiteConfigStorage wxCpConfigStorage,
                                                 String timestamp, String nonce, String msgSignature) {
     try {
       return fromEncryptedXml(IOUtils.toString(is, StandardCharsets.UTF_8), wxCpConfigStorage, timestamp, nonce, msgSignature);

@@ -2,11 +2,14 @@ package me.chanjar.weixin.cp.bean.message;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
+import lombok.ToString;
 import me.chanjar.weixin.common.util.xml.XStreamCDataConverter;
-import me.chanjar.weixin.cp.config.WxCpConfigStorage;
+import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 import me.chanjar.weixin.cp.util.crypto.WxCpCryptUtil;
 import me.chanjar.weixin.cp.util.xml.XStreamTransformer;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +29,9 @@ import java.io.Serializable;
  * @author Daniel Qian
  */
 @XStreamAlias("xml")
-public class SuiteTicketXmlMessage implements Serializable {
+public class WxCpSuiteXmlMessage implements Serializable {
 
-    public final Logger log = LoggerFactory.getLogger(SuiteTicketXmlMessage.class);
+    public final Logger log = LoggerFactory.getLogger(WxCpSuiteXmlMessage.class);
 
     private static final long serialVersionUID = -1042994982179476410L;
 
@@ -60,30 +63,30 @@ public class SuiteTicketXmlMessage implements Serializable {
     private Long timeStamp;
 
 
-    public static SuiteTicketXmlMessage fromXml(String xml) {
+    public static WxCpSuiteXmlMessage fromXml(String xml) {
         //修改微信变态的消息内容格式，方便解析
-        return XStreamTransformer.fromXml(SuiteTicketXmlMessage.class, xml);
+        return XStreamTransformer.fromXml(WxCpSuiteXmlMessage.class, xml);
     }
 
-    protected static SuiteTicketXmlMessage fromXml(InputStream is) {
-        return XStreamTransformer.fromXml(SuiteTicketXmlMessage.class, is);
+    protected static WxCpSuiteXmlMessage fromXml(InputStream is) {
+        return XStreamTransformer.fromXml(WxCpSuiteXmlMessage.class, is);
     }
 
     /**
      * 从加密字符串转换.
      */
-    public static SuiteTicketXmlMessage fromEncryptedXml(
+    public static WxCpSuiteXmlMessage fromEncryptedXml(
         String encryptedXml,
-        WxCpConfigStorage wxCpConfigStorage,
+        WxCpSuiteConfigStorage wxCpConfigStorage,
         String timestamp, String nonce, String msgSignature) {
         WxCpCryptUtil cryptUtil = new WxCpCryptUtil(wxCpConfigStorage);
         String plainText = cryptUtil.decrypt(msgSignature, timestamp, nonce, encryptedXml);
         return fromXml(plainText);
     }
 
-    public static SuiteTicketXmlMessage fromEncryptedXml(
+    public static WxCpSuiteXmlMessage fromEncryptedXml(
         InputStream is,
-        WxCpConfigStorage wxCpConfigStorage,
+        WxCpSuiteConfigStorage wxCpConfigStorage,
         String timestamp, String nonce, String msgSignature) {
         try {
             return fromEncryptedXml(IOUtils.toString(is, "UTF-8"), wxCpConfigStorage, timestamp, nonce, msgSignature);
@@ -140,5 +143,10 @@ public class SuiteTicketXmlMessage implements Serializable {
     public void setAuthCorpId(String authCorpId) {
         this.authCorpId = authCorpId;
     }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
+  }
 }
 
