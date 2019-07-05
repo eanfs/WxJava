@@ -8,11 +8,8 @@ import me.chanjar.weixin.cp.WxCpConsts;
 import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.api.WxCpSuiteComponentService;
 import me.chanjar.weixin.cp.api.WxCpSuiteService;
-import me.chanjar.weixin.cp.bean.WxCpAuthCorpToken;
-import me.chanjar.weixin.cp.bean.WxCpAuthInfo;
-import me.chanjar.weixin.cp.bean.WxCpPreAuth;
-import me.chanjar.weixin.cp.bean.WxCpSuiteAccessToken;
-import me.chanjar.weixin.cp.bean.message.SuiteTicketXmlMessage;
+import me.chanjar.weixin.cp.bean.*;
+import me.chanjar.weixin.cp.bean.message.WxCpSuiteXmlMessage;
 import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -55,7 +52,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   }
 
   @Override
-  public String route(final SuiteTicketXmlMessage message) throws WxErrorException {
+  public String route(final WxCpSuiteXmlMessage message) throws WxErrorException {
     if (message == null) {
       throw new NullPointerException("message is empty");
     }

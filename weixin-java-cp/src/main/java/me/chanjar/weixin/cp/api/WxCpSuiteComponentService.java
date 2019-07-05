@@ -2,7 +2,8 @@ package me.chanjar.weixin.cp.api;
 
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.cp.bean.WxCpAuthInfo;
-import me.chanjar.weixin.cp.bean.message.SuiteTicketXmlMessage;
+import me.chanjar.weixin.cp.bean.WxCpXmlMessage;
+import me.chanjar.weixin.cp.bean.message.WxCpSuiteXmlMessage;
 import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 
 /**
@@ -22,7 +23,7 @@ public interface WxCpSuiteComponentService {
   String AUTH_INFO_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_auth_info";
   String CORP_TOKEN_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_corp_token";
 
-  String route(SuiteTicketXmlMessage wxMessage) throws WxErrorException;
+  String route(WxCpSuiteXmlMessage wxMessage) throws WxErrorException;
 
   WxCpSuiteConfigStorage getWxCpSuiteConfigStorage();
 
