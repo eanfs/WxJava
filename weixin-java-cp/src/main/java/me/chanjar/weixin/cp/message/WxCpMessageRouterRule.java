@@ -4,6 +4,7 @@ import me.chanjar.weixin.common.api.WxErrorExceptionHandler;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.cp.api.WxCpService;
+import me.chanjar.weixin.cp.api.WxCpSuiteService;
 import me.chanjar.weixin.cp.bean.WxCpXmlMessage;
 import me.chanjar.weixin.cp.bean.WxCpXmlOutMessage;
 import org.apache.commons.lang3.StringUtils;
@@ -243,6 +244,46 @@ public class WxCpMessageRouterRule {
   protected WxCpXmlOutMessage service(WxCpXmlMessage wxMessage,
                                       Map<String, Object> context,
                                       WxCpService wxCpService,
+                                      WxSessionManager sessionManager,
+                                      WxErrorExceptionHandler exceptionHandler) {
+
+    if (context == null) {
+      context = new HashMap<>();
+    }
+
+    try {
+      // 如果拦截器不通过
+      for (WxCpMessageInterceptor interceptor : this.interceptors) {
+        if (!interceptor.intercept(wxMessage, context, wxCpService, sessionManager)) {
+          return null;
+        }
+      }
+
+      // 交给handler处理
+      WxCpXmlOutMessage res = null;
+      for (WxCpMessageHandler handler : this.handlers) {
+        // 返回最后handler的结果
+        res = handler.handle(wxMessage, context, wxCpService, sessionManager);
+      }
+      return res;
+
+    } catch (WxErrorException e) {
+      exceptionHandler.handle(e);
+    }
+
+    return null;
+
+  }
+
+  /**
+   * 处理微信推送过来的消息
+   *
+   * @param wxMessage
+   * @return true 代表继续执行别的router，false 代表停止执行别的router
+   */
+  protected WxCpXmlOutMessage service(WxCpXmlMessage wxMessage,
+                                      Map<String, Object> context,
+                                      WxCpSuiteService wxCpService,
                                       WxSessionManager sessionManager,
                                       WxErrorExceptionHandler exceptionHandler) {
 

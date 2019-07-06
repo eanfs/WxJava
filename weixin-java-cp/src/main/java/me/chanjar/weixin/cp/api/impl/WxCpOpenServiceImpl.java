@@ -14,12 +14,12 @@ import me.chanjar.weixin.cp.config.WxCpConfigStorage;
  */
 public class WxCpOpenServiceImpl extends WxCpServiceImpl {
   private WxCpSuiteComponentService wxCpSuiteComponentService;
-  private WxCpConfigStorage wxCpConfigStorage;
+//  private WxCpConfigStorage wxCpConfigStorage;
   private String authCorpId;
 
   public WxCpOpenServiceImpl(WxCpSuiteComponentService wxCpSuiteComponentService, String authCorpId, WxCpConfigStorage wxCpConfigStorage) {
     this.wxCpSuiteComponentService = wxCpSuiteComponentService;
-    this.wxCpConfigStorage = wxCpConfigStorage;
+    this.configStorage = wxCpConfigStorage;
     this.authCorpId = authCorpId;
     initHttp();
   }
@@ -31,6 +31,6 @@ public class WxCpOpenServiceImpl extends WxCpServiceImpl {
 
   @Override
   public WxCpConfigStorage getWxCpConfigStorage() {
-    return this.wxCpConfigStorage;
+    return this.configStorage;
   }
 }

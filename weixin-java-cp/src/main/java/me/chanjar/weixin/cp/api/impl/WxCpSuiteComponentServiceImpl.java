@@ -10,6 +10,7 @@ import me.chanjar.weixin.cp.api.WxCpSuiteComponentService;
 import me.chanjar.weixin.cp.api.WxCpSuiteService;
 import me.chanjar.weixin.cp.bean.*;
 import me.chanjar.weixin.cp.bean.message.WxCpSuiteXmlMessage;
+import me.chanjar.weixin.cp.config.WxCpConfigStorage;
 import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -52,11 +53,11 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   }
 
   @Override
-  public String route(final WxCpSuiteXmlMessage message) throws WxErrorException {
+  public String route(final WxCpXmlMessage message) throws WxErrorException {
     if (message == null) {
       throw new NullPointerException("message is empty");
     }
-    if (StringUtils.equals(message.getInfoType(), WxCpConsts.WX_MESSAGE_TYPE_SUITE_TICKET)) {
+    if (StringUtils.equals(message.getInfoType(), WxCpConsts.SuiteEventType.SUITE_TICKET)) {
       log.debug("handleSuiteMessage exec getPermanentCode getSuiteTicket: {} suiteId: {}", message.getSuiteTicket(), message.getSuiteId());
 
       // 企业微信服务器会定时（每十分钟）推送ticket。ticket会实时变更，并用于后续接口的调用。
@@ -174,7 +175,8 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
       synchronized (WX_CP_SERVICE_MAP) {
         wxCpService = WX_CP_SERVICE_MAP.get(authCorpId);
         if (wxCpService == null) {
-          wxCpService = new WxCpOpenServiceImpl(this, authCorpId, getWxCpSuiteConfigStorage().getWxCpConfigStorage(authCorpId));
+          WxCpConfigStorage cpConfigStorage = this.getWxCpSuiteConfigStorage().getWxCpConfigStorage(authCorpId);
+          wxCpService = new WxCpOpenServiceImpl(this, authCorpId, cpConfigStorage);
 
           WX_CP_SERVICE_MAP.put(authCorpId, wxCpService);
         }

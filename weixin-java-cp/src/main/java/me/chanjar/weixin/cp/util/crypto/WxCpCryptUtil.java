@@ -67,6 +67,7 @@ public class WxCpCryptUtil extends WxCryptUtil {
     this.token = token;
     this.appidOrCorpid = suiteId;
     this.aesKey = Base64.decodeBase64(encodingAesKey + "=");
+    this.skipCheckAppId = true;
   }
 
 

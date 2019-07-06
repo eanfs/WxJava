@@ -125,7 +125,7 @@ public class WxCpSuiteInMemoryConfigStorage implements WxCpSuiteConfigStorage {
     return System.currentTimeMillis() > suiteVerifyTicketExpiresTime;
   }
 
-  @Override
+//  @Override
   public String getCorpId() {
     return this.corpId;
   }
@@ -134,7 +134,7 @@ public class WxCpSuiteInMemoryConfigStorage implements WxCpSuiteConfigStorage {
     this.corpId = corpId;
   }
 
-  @Override
+//  @Override
   public String getCorpSecret() {
     return this.corpSecret;
   }
