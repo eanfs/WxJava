@@ -25,6 +25,8 @@ public class WxCpMessageRouterRule {
 
   private String msgType;
 
+  private String infoType;
+
   private String event;
 
   private String eventKey;
@@ -76,6 +78,16 @@ public class WxCpMessageRouterRule {
    */
   public WxCpMessageRouterRule msgType(String msgType) {
     this.msgType = msgType;
+    return this;
+  }
+
+  /**
+   * 如果msgType等于某值
+   *
+   * @param infoType
+   */
+  public WxCpMessageRouterRule infoType(String infoType) {
+    this.infoType = infoType;
     return this;
   }
 
@@ -221,6 +233,8 @@ public class WxCpMessageRouterRule {
         &&
         (this.msgType == null || this.msgType.equalsIgnoreCase(wxMessage.getMsgType()))
         &&
+        (this.infoType == null || this.infoType.equalsIgnoreCase(wxMessage.getInfoType()))
+        &&
         (this.event == null || this.event.equalsIgnoreCase(wxMessage.getEvent()))
         &&
         (this.eventKey == null || this.eventKey.equalsIgnoreCase(wxMessage.getEventKey()))
@@ -321,6 +335,10 @@ public class WxCpMessageRouterRule {
 
   public void setMsgType(String msgType) {
     this.msgType = msgType;
+  }
+
+  public void setInfoType(String infoType) {
+    this.infoType = infoType;
   }
 
   public void setEvent(String event) {

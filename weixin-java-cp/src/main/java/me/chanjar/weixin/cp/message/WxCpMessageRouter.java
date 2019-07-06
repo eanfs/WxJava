@@ -233,12 +233,20 @@ public class WxCpMessageRouter {
   protected boolean isDuplicateMessage(WxCpXmlMessage wxMessage) {
     String messageId;
     if (wxMessage.getMsgId() == null) {
-      messageId = String.valueOf(wxMessage.getCreateTime())
-        + "-" + StringUtils.trimToEmpty(String.valueOf(wxMessage.getAgentId()))
-        + "-" + wxMessage.getFromUserName()
-        + "-" + StringUtils.trimToEmpty(wxMessage.getEventKey())
-        + "-" + StringUtils.trimToEmpty(wxMessage.getEvent())
-      ;
+      if (wxMessage.getInfoType() == null) {
+        messageId = String.valueOf(wxMessage.getCreateTime())
+          + "-" + StringUtils.trimToEmpty(String.valueOf(wxMessage.getAgentId()))
+          + "-" + wxMessage.getFromUserName()
+          + "-" + StringUtils.trimToEmpty(wxMessage.getEventKey())
+          + "-" + StringUtils.trimToEmpty(wxMessage.getEvent())
+        ;
+      } else {
+        messageId = String.valueOf(wxMessage.getTimeStamp())
+          + "-" + StringUtils.trimToEmpty(String.valueOf(wxMessage.getSuiteId()))
+          + "-" + StringUtils.trimToEmpty(String.valueOf(wxMessage.getAuthCorpId()))
+          + "-" + wxMessage.getFromUserName()
+          + "-" + StringUtils.trimToEmpty(wxMessage.getInfoType());
+      }
     } else {
       messageId = new StringBuilder().append(wxMessage.getMsgId())
         .append("-").append(wxMessage.getCreateTime())
