@@ -33,7 +33,7 @@ public interface WxCpSuiteComponentService {
 
   String getSessionInfo() throws WxErrorException;
 
-  WxCpAuthInfo getPermanentCode(String authCorpId) throws WxErrorException;
+  WxCpAuthInfo getPermanentCode(String authCorpId, String preAuthCode) throws WxErrorException;
 
   WxCpAuthInfo getAuthInfo(String authCorpId, String permanentCode) throws WxErrorException;
 

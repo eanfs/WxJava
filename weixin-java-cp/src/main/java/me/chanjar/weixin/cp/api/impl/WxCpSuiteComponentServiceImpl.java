@@ -110,7 +110,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   }
 
   @Override
-  public WxCpAuthInfo getPermanentCode(String authCorpId) throws WxErrorException {
+  public WxCpAuthInfo getPermanentCode(String authCorpId, String preAuthCode) throws WxErrorException {
     WxCpAuthInfo authInfo;
     synchronized (this.globalPermanentCodeLock) {
       String permanentCode = this.getWxCpSuiteConfigStorage().getAuthCorpPermanentCode(authCorpId);
@@ -119,7 +119,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
         final String url = PERMANENT_CODE_URL;
 //      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("auth_code", this.getPreAuthCode());
+        jsonObject.addProperty("auth_code", preAuthCode);
         String resultContent = post(url, jsonObject.getAsString());
         WxError error = WxError.fromJson(resultContent, WxType.CP);
         if (error.getErrorCode() != 0) {
@@ -155,7 +155,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
     final String url = CORP_TOKEN_URL;
 //      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
 
-    WxCpAuthInfo authInfo = getPermanentCode(authCorpId);
+    WxCpAuthInfo authInfo = getPermanentCode(authCorpId, null);
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("auth_corpid", authCorpId);
     jsonObject.addProperty("permanent_code", authInfo.getPermanentCode());
