@@ -43,6 +43,7 @@ public abstract class WxCpSuiteServiceAbstractImpl<H, P> implements WxCpSuiteSer
    */
   public abstract void initHttp();
 
+  @Override
   public boolean checkSignature(String msgSignature, String timestamp, String nonce, String data) {
     try {
       return SHA1.gen(getWxCpSuiteConfigStorage().getSuiteToken(), timestamp, nonce, data)

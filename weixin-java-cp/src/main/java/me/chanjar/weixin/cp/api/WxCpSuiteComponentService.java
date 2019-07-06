@@ -23,7 +23,7 @@ public interface WxCpSuiteComponentService {
   String AUTH_INFO_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_auth_info";
   String CORP_TOKEN_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_corp_token";
 
-  String route(WxCpSuiteXmlMessage wxMessage) throws WxErrorException;
+  String route(WxCpXmlMessage wxMessage) throws WxErrorException;
 
   WxCpSuiteConfigStorage getWxCpSuiteConfigStorage();
 

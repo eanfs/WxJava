@@ -45,6 +45,33 @@ public class WxCpXmlMessage implements Serializable {
   private Map<String, Object> allFieldsMap;
 
   ///////////////////////
+  // 以下都是企业微信服务器会定时（每十分钟）推送ticket。ticket会实时变更，并用于后续接口的调用
+  ///////////////////////
+
+  @XStreamAlias("SuiteId")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String suiteId;
+
+  @XStreamAlias("InfoType")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String infoType;
+
+  @XStreamAlias("SuiteTicket")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String suiteTicket;
+
+  @XStreamAlias("AuthCode")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String authCode;
+
+  @XStreamAlias("AuthCorpId")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String authCorpId;
+
+  @XStreamAlias("TimeStamp")
+  private Long timeStamp;
+
+  ///////////////////////
   // 以下都是微信推送过来的消息的xml的element所对应的属性
   ///////////////////////
 

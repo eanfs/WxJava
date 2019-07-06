@@ -3,6 +3,7 @@ package me.chanjar.weixin.cp.message;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.cp.api.WxCpService;
+import me.chanjar.weixin.cp.api.WxCpSuiteService;
 import me.chanjar.weixin.cp.bean.WxCpXmlMessage;
 
 import java.util.Map;
@@ -26,6 +27,11 @@ public interface WxCpMessageInterceptor {
   boolean intercept(WxCpXmlMessage wxMessage,
                     Map<String, Object> context,
                     WxCpService wxCpService,
+                    WxSessionManager sessionManager) throws WxErrorException;
+
+  boolean intercept(WxCpXmlMessage wxMessage,
+                    Map<String, Object> context,
+                    WxCpSuiteService wxCpService,
                     WxSessionManager sessionManager) throws WxErrorException;
 
 }

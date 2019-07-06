@@ -61,19 +61,19 @@ public class WxCpMessageRouter {
 
   private final WxCpService wxCpService;
 
-  private ExecutorService executorService;
+  protected ExecutorService executorService;
 
-  private WxMessageDuplicateChecker messageDuplicateChecker;
+  protected WxMessageDuplicateChecker messageDuplicateChecker;
 
-  private WxSessionManager sessionManager;
+  protected WxSessionManager sessionManager;
 
-  private WxErrorExceptionHandler exceptionHandler;
+  protected WxErrorExceptionHandler exceptionHandler;
 
   public WxCpMessageRouter(WxCpService wxCpService) {
     this.wxCpService = wxCpService;
     this.executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
     this.messageDuplicateChecker = new WxMessageInMemoryDuplicateChecker();
-    this.sessionManager = wxCpService.getSessionManager();
+    this.sessionManager = new StandardSessionManager();
     this.exceptionHandler = new LogExceptionHandler();
   }
 

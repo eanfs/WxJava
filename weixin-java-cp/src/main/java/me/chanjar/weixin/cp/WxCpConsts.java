@@ -10,27 +10,6 @@ package me.chanjar.weixin.cp;
  */
 public class WxCpConsts {
 
-
-  /**从企业微信应用市场发起授权时, 授权成功后 suite_ticket*/
-  public static final String REDIS_KEY_SUITE_TICKET = "esenyun_wxcp:suite_ticket:";
-
-  /**第三方服务商 自用的Suite Access Token*/
-  public static final String REDIS_KEY_SUITE_ACCESS_TOKEN = "esenyun_wxcp:suite_access_token:";
-
-  /**授权方提供的 获取企业永久授权码*/
-  public static final String REDIS_KEY_CROP_PERMANENT_CODE = "esenyun_wxcp:crop_permanent_code:";
-
-  /** 获取企业永久授权码 AccessToken */
-  public static final String REDIS_KEY_CROP_ACCESS_TOKEN = "esenyun_wxcp:crop_access_token:";
-
-  /** 从企业微信应用市场发起授权时, 授权成功后*/
-  public static final String REDIS_KEY_SUITE_AUTH = "esenyun_wxcp:suite_auth:";
-
-  public static final String WX_MESSAGE_TYPE_CREATE_AUTH = "create_auth";
-
-  public static final String WX_MESSAGE_TYPE_CANCEL_AUTH = "cancel_auth";
-
-  public static final String WX_MESSAGE_TYPE_SUITE_TICKET = "suite_ticket";
   /**
    * 企业微信端推送过来的事件类型.
    * 参考文档：https://work.weixin.qq.com/api/doc#12974
@@ -194,5 +173,32 @@ public class WxCpConsts {
      * markdown消息.
      */
     public static final String MARKDOWN = "markdown";
+  }
+
+  /**
+   * 企业微信端推送过来的事件类型.
+   * 参考文档：https://work.weixin.qq.com/api/doc#12974
+   */
+  public static class SuiteEventType {
+    /**
+     * 授权成功通知事件.
+     */
+    public static final String CREATE_AUTH = "create_auth";
+
+    /**
+     * 变更授权通知事件.
+     */
+    public static final String CHANGE_AUTH = "change_auth";
+
+    /**
+     * 取消授权通知事件.
+     */
+    public static final String CANCEL_AUTH = "cancel_auth";
+
+    /**
+     * 进入应用事件.
+     */
+    public static final String SUITE_TICKET = "suite_ticket";
+
   }
 }
