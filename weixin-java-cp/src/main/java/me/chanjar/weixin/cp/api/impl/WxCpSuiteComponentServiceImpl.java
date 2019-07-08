@@ -129,6 +129,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
           throw new WxErrorException(error);
         }
         authInfo = WxCpAuthInfo.fromJson(resultContent);
+        this.getWxCpSuiteConfigStorage().updateAuthCorpPermanentCode(authInfo.getAuthCorpInfo().getCorpId(), authInfo.getPermanentCode());
       } else {
         authInfo = getAuthInfo(authCorpId, permanentCode);
       }
@@ -150,25 +151,14 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
       throw new WxErrorException(error);
     }
     WxCpAuthInfo authInfo = WxCpAuthInfo.fromJson(resultContent);
+    this.getWxCpSuiteConfigStorage().updateAuthCorpPermanentCode(authInfo.getAuthCorpInfo().getCorpId(), authInfo.getPermanentCode());
+
     return authInfo;
   }
 
   @Override
   public String getAuthCorpAccessToken(String authCorpId) throws WxErrorException {
-    final String url = CORP_TOKEN_URL;
-//      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
-
-    WxCpAuthInfo authInfo = getPermanentCode(authCorpId, null);
-    JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("auth_corpid", authCorpId);
-    jsonObject.addProperty("permanent_code", authInfo.getPermanentCode());
-    String resultContent = post(url, jsonObject.toString());
-    WxError error = WxError.fromJson(resultContent, WxType.CP);
-    if (error.getErrorCode() != 0) {
-      throw new WxErrorException(error);
-    }
-    WxCpAuthCorpToken authCorpToken = WxCpAuthCorpToken.fromJson(resultContent);
-    return authCorpToken.getAccessToken();
+    return getAuthCorpAccessToken(authCorpId, false);
   }
 
   @Override
