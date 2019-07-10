@@ -26,6 +26,8 @@ public class WxCpSuiteInMemoryConfigStorage implements WxCpSuiteConfigStorage {
   private volatile String token;
   private volatile String aesKey;
 
+  protected volatile String oauth2redirectUri;
+
   private Map<String, Token> authCorpAccessTokens = new ConcurrentHashMap<>();
   private Map<String, String> authCorpPermanentCodes = new ConcurrentHashMap<>();
 
@@ -168,6 +170,15 @@ public class WxCpSuiteInMemoryConfigStorage implements WxCpSuiteConfigStorage {
   @Override
   public void updateAuthCorpPermanentCode(String authCorpId, String permanentCode) {
     authCorpPermanentCodes.put(authCorpId, permanentCode);
+  }
+
+  @Override
+  public String getOauth2redirectUri() {
+    return oauth2redirectUri;
+  }
+
+  public void setOauth2redirectUri(String oauth2redirectUri) {
+    this.oauth2redirectUri = oauth2redirectUri;
   }
 
   @Override

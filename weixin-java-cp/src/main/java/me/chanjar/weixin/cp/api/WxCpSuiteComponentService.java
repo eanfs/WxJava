@@ -2,6 +2,7 @@ package me.chanjar.weixin.cp.api;
 
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.cp.bean.WxCpAuthInfo;
+import me.chanjar.weixin.cp.bean.WxCpMaJsCode2SessionResult;
 import me.chanjar.weixin.cp.bean.WxCpXmlMessage;
 import me.chanjar.weixin.cp.bean.message.WxCpSuiteXmlMessage;
 import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
@@ -23,6 +24,9 @@ public interface WxCpSuiteComponentService {
   String AUTH_INFO_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_auth_info";
   String CORP_TOKEN_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_corp_token";
 
+  String MINIAPP_JSCODE_2_SESSION = "https://qyapi.weixin.qq.com/cgi-bin/service/miniprogram/jscode2session";
+
+
   String route(WxCpXmlMessage wxMessage) throws WxErrorException;
 
   WxCpSuiteConfigStorage getWxCpSuiteConfigStorage();
@@ -43,5 +47,11 @@ public interface WxCpSuiteComponentService {
 
   String getAuthCorpAccessToken(String authCorpId, boolean forceRefresh) throws WxErrorException;
 
+  /**
+   * 第三方小程序登录凭证校验
+   *
+   * @param jsCode 登录时获取的 code
+   */
+  WxCpMaJsCode2SessionResult jsCode2Session(String jsCode) throws WxErrorException;
 
 }
