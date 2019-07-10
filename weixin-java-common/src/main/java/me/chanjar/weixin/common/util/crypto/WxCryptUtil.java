@@ -50,6 +50,7 @@ public class WxCryptUtil {
   protected byte[] aesKey;
   protected String token;
   protected String appidOrCorpid;
+  protected boolean skipCheckAppId;
 
   public WxCryptUtil() {
   }
@@ -276,10 +277,15 @@ public class WxCryptUtil {
 
     // appid不相同的情况
     if (!fromAppid.equals(this.appidOrCorpid)) {
-      throw new RuntimeException("AppID不正确");
+      if (skipCheckAppId) {
+        return xmlContent;
+      } else {
+        throw new RuntimeException("AppID不正确 fromAppId:" + fromAppid + " current appidOrCorpid:" + appidOrCorpid
+          + "\n xml message content: " + xmlContent);
+      }
+    } else {
+      return xmlContent;
     }
-
-    return xmlContent;
 
   }
 

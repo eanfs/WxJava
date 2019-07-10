@@ -45,7 +45,6 @@ public abstract class BaseWxCpServiceImpl<H, P> implements WxCpService, RequestH
   private WxCpOAuth2Service oauth2Service = new WxCpOAuth2ServiceImpl(this);
   private WxCpTagService tagService = new WxCpTagServiceImpl(this);
   private WxCpAgentService agentService = new WxCpAgentServiceImpl(this);
-  private WxCpSuiteService suiteService = new WxCpSuiteServiceImpl(this, this.configStorage);
 
   private WxCpOAService oaService = new WxCpOAServiceImpl(this);
   private WxCpTaskCardService taskCardService = new WxCpTaskCardServiceImpl(this);
@@ -403,11 +402,6 @@ public abstract class BaseWxCpServiceImpl<H, P> implements WxCpService, RequestH
   @Override
   public RequestHttp<?, ?> getRequestHttp() {
     return this;
-  }
-
-  @Override
-  public WxCpSuiteService getSuiteService() {
-    return suiteService;
   }
 
   @Override
