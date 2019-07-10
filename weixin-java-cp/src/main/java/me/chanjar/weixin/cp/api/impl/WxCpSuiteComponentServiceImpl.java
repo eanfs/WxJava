@@ -1,5 +1,6 @@
 package me.chanjar.weixin.cp.api.impl;
 
+import com.google.common.base.Joiner;
 import com.google.gson.JsonObject;
 import me.chanjar.weixin.common.WxType;
 import me.chanjar.weixin.common.error.WxError;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -200,12 +202,22 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
     return this.getWxCpSuiteConfigStorage().getAuthCorpAccessToken(authCorpId);
   }
 
+  @Override
+  public WxCpMaJsCode2SessionResult jsCode2Session(String jsCode) throws WxErrorException {
+    Map<String, String> params = new HashMap<>(2);
+    params.put("js_code", jsCode);
+    params.put("grant_type", "authorization_code");
+
+    String result = this.get(MINIAPP_JSCODE_2_SESSION, Joiner.on("&").withKeyValueSeparator("=").join(params));
+    return WxCpMaJsCode2SessionResult.fromJson(result);
+  }
+
 
   public WxCpSuiteService getWxCpSuiteService() {
     return this.mainService;
   }
 
-  private String post(String uri, String postData) throws WxErrorException {
+  public String post(String uri, String postData) throws WxErrorException {
     return post(uri, postData, "suite_access_token");
   }
 
@@ -235,7 +247,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
     }
   }
 
-  private String get(String uri) throws WxErrorException {
+  public String get(String uri) throws WxErrorException {
     return get(uri, "suite_access_token");
   }
 
