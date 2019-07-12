@@ -90,7 +90,7 @@ public class WxCpSuiteOAuth2ServiceImpl implements WxCpOAuth2Service {
   @Override
   public String[] getUserInfo(String code) throws WxErrorException {
     String url = String.format("https://qyapi.weixin.qq.com/cgi-bin/service/getuserinfo3rd?code=%s&access_token=%s",
-      code, this.mainService.getWxCpSuiteConfigStorage().getSuiteAccessToken());
+      code, this.mainService.getWxCpSuiteComponentService().getSuiteAccessToken(false));
     String responseText = this.mainService.get(url, null);
     JsonElement je = new JsonParser().parse(responseText);
     JsonObject jo = je.getAsJsonObject();
@@ -110,7 +110,7 @@ public class WxCpSuiteOAuth2ServiceImpl implements WxCpOAuth2Service {
   @Override
   public WxCpUserDetail getUserDetail(String userTicket) throws WxErrorException {
     String url = String.format("https://qyapi.weixin.qq.com/cgi-bin/service/getuserdetail3rd?access_token=%s",
-      this.mainService.getWxCpSuiteConfigStorage().getSuiteAccessToken());
+      this.mainService.getWxCpSuiteComponentService().getSuiteAccessToken(false));
     JsonObject param = new JsonObject();
     param.addProperty("user_ticket", userTicket);
     String responseText = this.mainService.post(url, param.toString());

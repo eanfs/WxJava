@@ -73,7 +73,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   public String getSuiteAccessToken(boolean forceRefresh) throws WxErrorException {
 
     synchronized (this.globalAccessTokenRefreshLock) {
-      if (this.getWxCpSuiteConfigStorage().isSuiteAccessTokenExpired()) {
+      if (this.getWxCpSuiteConfigStorage().isSuiteAccessTokenExpired() || forceRefresh) {
 
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("suite_id", this.getWxCpSuiteConfigStorage().getSuiteId());
@@ -208,7 +208,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
     params.put("js_code", jsCode);
     params.put("grant_type", "authorization_code");
 
-    String result = this.get(MINIAPP_JSCODE_2_SESSION, Joiner.on("&").withKeyValueSeparator("=").join(params));
+    String result = this.get(MINIAPP_JSCODE_2_SESSION + "?"+ Joiner.on("&").withKeyValueSeparator("=").join(params));
     return WxCpMaJsCode2SessionResult.fromJson(result);
   }
 
