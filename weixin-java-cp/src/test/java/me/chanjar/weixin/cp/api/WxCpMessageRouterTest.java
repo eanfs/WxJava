@@ -1,6 +1,7 @@
 package me.chanjar.weixin.cp.api;
 
 import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.StandardSessionManager;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.cp.message.WxCpMessageHandler;
@@ -79,6 +80,11 @@ public class WxCpMessageRouterTest {
       @Override
       public WxCpXmlOutMessage handle(WxCpXmlMessage wxMessage, Map<String, Object> context, WxCpService wxCpService,
                                       WxSessionManager sessionManager) {
+        return null;
+      }
+
+      @Override
+      public WxCpXmlOutMessage handle(WxCpXmlMessage wxMessage, Map<String, Object> context, WxCpSuiteService wxCpService, WxSessionManager sessionManager) throws WxErrorException {
         return null;
       }
     }).end();
@@ -293,6 +299,11 @@ public class WxCpMessageRouterTest {
       return null;
     }
 
+    @Override
+    public WxCpXmlOutMessage handle(WxCpXmlMessage wxMessage, Map<String, Object> context, WxCpSuiteService wxCpService, WxSessionManager sessionManager) throws WxErrorException {
+      return null;
+    }
+
   }
 
   public static class WxSessionMessageHandler implements WxCpMessageHandler {
@@ -301,6 +312,11 @@ public class WxCpMessageRouterTest {
     public WxCpXmlOutMessage handle(WxCpXmlMessage wxMessage, Map<String, Object> context, WxCpService wxCpService,
                                     WxSessionManager sessionManager) {
       sessionManager.getSession(wxMessage.getFromUserName());
+      return null;
+    }
+
+    @Override
+    public WxCpXmlOutMessage handle(WxCpXmlMessage wxMessage, Map<String, Object> context, WxCpSuiteService wxCpService, WxSessionManager sessionManager) throws WxErrorException {
       return null;
     }
 

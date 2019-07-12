@@ -9,6 +9,7 @@ import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.util.XmlUtils;
 import me.chanjar.weixin.common.util.xml.XStreamCDataConverter;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
+import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 import me.chanjar.weixin.cp.util.crypto.WxCpCryptUtil;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 import me.chanjar.weixin.cp.util.xml.XStreamTransformer;
@@ -42,6 +43,33 @@ public class WxCpXmlMessage implements Serializable {
    * 使用dom4j解析的存放所有xml属性和值的map.
    */
   private Map<String, Object> allFieldsMap;
+
+  ///////////////////////
+  // 以下都是企业微信服务器会定时（每十分钟）推送ticket。ticket会实时变更，并用于后续接口的调用
+  ///////////////////////
+
+  @XStreamAlias("SuiteId")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String suiteId;
+
+  @XStreamAlias("InfoType")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String infoType;
+
+  @XStreamAlias("SuiteTicket")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String suiteTicket;
+
+  @XStreamAlias("AuthCode")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String authCode;
+
+  @XStreamAlias("AuthCorpId")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String authCorpId;
+
+  @XStreamAlias("TimeStamp")
+  private Long timeStamp;
 
   ///////////////////////
   // 以下都是微信推送过来的消息的xml的element所对应的属性
@@ -391,6 +419,26 @@ public class WxCpXmlMessage implements Serializable {
   }
 
   public static WxCpXmlMessage fromEncryptedXml(InputStream is, WxCpConfigStorage wxCpConfigStorage,
+                                                String timestamp, String nonce, String msgSignature) {
+    try {
+      return fromEncryptedXml(IOUtils.toString(is, StandardCharsets.UTF_8), wxCpConfigStorage, timestamp, nonce, msgSignature);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  /**
+   * 从加密字符串转换.
+   */
+  public static WxCpXmlMessage fromEncryptedXml(String encryptedXml, WxCpSuiteConfigStorage wxCpConfigStorage,
+                                                String timestamp, String nonce, String msgSignature) {
+    WxCpCryptUtil cryptUtil = new WxCpCryptUtil(wxCpConfigStorage);
+    String plainText = cryptUtil.decrypt(msgSignature, timestamp, nonce, encryptedXml);
+    log.debug("解密后的原始xml消息内容：{}", plainText);
+    return fromXml(plainText);
+  }
+
+  public static WxCpXmlMessage fromEncryptedXml(InputStream is, WxCpSuiteConfigStorage wxCpConfigStorage,
                                                 String timestamp, String nonce, String msgSignature) {
     try {
       return fromEncryptedXml(IOUtils.toString(is, StandardCharsets.UTF_8), wxCpConfigStorage, timestamp, nonce, msgSignature);

@@ -12,6 +12,7 @@ import me.chanjar.weixin.cp.bean.outxmlbuilder.TextBuilder;
 import me.chanjar.weixin.cp.bean.outxmlbuilder.VideoBuilder;
 import me.chanjar.weixin.cp.bean.outxmlbuilder.VoiceBuilder;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
+import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 import me.chanjar.weixin.cp.util.crypto.WxCpCryptUtil;
 import me.chanjar.weixin.cp.util.xml.XStreamTransformer;
 
@@ -84,6 +85,15 @@ public abstract class WxCpXmlOutMessage implements Serializable {
    * 转换成加密的xml格式.
    */
   public String toEncryptedXml(WxCpConfigStorage wxCpConfigStorage) {
+    String plainXml = toXml();
+    WxCpCryptUtil pc = new WxCpCryptUtil(wxCpConfigStorage);
+    return pc.encrypt(plainXml);
+  }
+
+  /**
+   * 转换成加密的xml格式.
+   */
+  public String toEncryptedXml(WxCpSuiteConfigStorage wxCpConfigStorage) {
     String plainXml = toXml();
     WxCpCryptUtil pc = new WxCpCryptUtil(wxCpConfigStorage);
     return pc.encrypt(plainXml);

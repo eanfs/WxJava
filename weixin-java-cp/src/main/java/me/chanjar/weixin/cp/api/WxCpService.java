@@ -310,8 +310,6 @@ public interface WxCpService {
 
   WxCpAgentService getAgentService();
 
-  WxCpSuiteService getSuiteService();
-  
   WxCpOAService getOAService();
 
   /**

@@ -4,6 +4,7 @@ import me.chanjar.weixin.common.api.WxErrorExceptionHandler;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.cp.api.WxCpService;
+import me.chanjar.weixin.cp.api.WxCpSuiteService;
 import me.chanjar.weixin.cp.bean.WxCpXmlMessage;
 import me.chanjar.weixin.cp.bean.WxCpXmlOutMessage;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,8 @@ public class WxCpMessageRouterRule {
   private String fromUser;
 
   private String msgType;
+
+  private String infoType;
 
   private String event;
 
@@ -75,6 +78,16 @@ public class WxCpMessageRouterRule {
    */
   public WxCpMessageRouterRule msgType(String msgType) {
     this.msgType = msgType;
+    return this;
+  }
+
+  /**
+   * 如果msgType等于某值
+   *
+   * @param infoType
+   */
+  public WxCpMessageRouterRule infoType(String infoType) {
+    this.infoType = infoType;
     return this;
   }
 
@@ -220,6 +233,8 @@ public class WxCpMessageRouterRule {
         &&
         (this.msgType == null || this.msgType.equalsIgnoreCase(wxMessage.getMsgType()))
         &&
+        (this.infoType == null || this.infoType.equalsIgnoreCase(wxMessage.getInfoType()))
+        &&
         (this.event == null || this.event.equalsIgnoreCase(wxMessage.getEvent()))
         &&
         (this.eventKey == null || this.eventKey.equalsIgnoreCase(wxMessage.getEventKey()))
@@ -274,12 +289,56 @@ public class WxCpMessageRouterRule {
 
   }
 
+  /**
+   * 处理微信推送过来的消息
+   *
+   * @param wxMessage
+   * @return true 代表继续执行别的router，false 代表停止执行别的router
+   */
+  protected WxCpXmlOutMessage service(WxCpXmlMessage wxMessage,
+                                      Map<String, Object> context,
+                                      WxCpSuiteService wxCpService,
+                                      WxSessionManager sessionManager,
+                                      WxErrorExceptionHandler exceptionHandler) {
+
+    if (context == null) {
+      context = new HashMap<>();
+    }
+
+    try {
+      // 如果拦截器不通过
+      for (WxCpMessageInterceptor interceptor : this.interceptors) {
+        if (!interceptor.intercept(wxMessage, context, wxCpService, sessionManager)) {
+          return null;
+        }
+      }
+
+      // 交给handler处理
+      WxCpXmlOutMessage res = null;
+      for (WxCpMessageHandler handler : this.handlers) {
+        // 返回最后handler的结果
+        res = handler.handle(wxMessage, context, wxCpService, sessionManager);
+      }
+      return res;
+
+    } catch (WxErrorException e) {
+      exceptionHandler.handle(e);
+    }
+
+    return null;
+
+  }
+
   public void setFromUser(String fromUser) {
     this.fromUser = fromUser;
   }
 
   public void setMsgType(String msgType) {
     this.msgType = msgType;
+  }
+
+  public void setInfoType(String infoType) {
+    this.infoType = infoType;
   }
 
   public void setEvent(String event) {

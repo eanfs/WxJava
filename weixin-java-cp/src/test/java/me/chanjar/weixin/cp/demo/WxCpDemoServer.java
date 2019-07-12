@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import me.chanjar.weixin.cp.api.WxCpSuiteService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -64,6 +65,16 @@ public class WxCpDemoServer {
             .toUser(wxMessage.getFromUserName()).build();
           return m;
         }
+
+        @Override
+        public WxCpXmlOutMessage handle(WxCpXmlMessage wxMessage,
+                                        Map<String, Object> context, WxCpSuiteService wxService,
+                                        WxSessionManager sessionManager) {
+          WxCpXmlOutTextMessage m = WxCpXmlOutMessage.TEXT().content("测试加密消息")
+            .fromUser(wxMessage.getToUserName())
+            .toUser(wxMessage.getFromUserName()).build();
+          return m;
+        }
       };
 
       WxCpMessageHandler oauth2handler = new WxCpMessageHandler() {
@@ -78,6 +89,14 @@ public class WxCpDemoServer {
             .fromUser(wxMessage.getToUserName())
             .toUser(wxMessage.getFromUserName()).build();
         }
+
+        @Override
+        public WxCpXmlOutMessage handle(WxCpXmlMessage wxMessage,
+                                        Map<String, Object> context, WxCpSuiteService wxService,
+                                        WxSessionManager sessionManager) {
+          return null;
+        }
+
       };
 
       wxCpMessageRouter = new WxCpMessageRouter(wxCpService);
@@ -96,6 +115,12 @@ public class WxCpDemoServer {
         .handler(new WxCpMessageHandler() {
           @Override
           public WxCpXmlOutMessage handle(WxCpXmlMessage wxMessage, Map<String, Object> context, WxCpService wxCpService, WxSessionManager sessionManager) throws WxErrorException {
+            System.out.println("通讯录发生变更");
+            return null;
+          }
+
+          @Override
+          public WxCpXmlOutMessage handle(WxCpXmlMessage wxMessage, Map<String, Object> context, WxCpSuiteService wxCpService, WxSessionManager sessionManager) throws WxErrorException {
             System.out.println("通讯录发生变更");
             return null;
           }
