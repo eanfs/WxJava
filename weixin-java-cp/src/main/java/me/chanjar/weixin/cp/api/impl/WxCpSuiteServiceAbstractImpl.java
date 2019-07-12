@@ -3,6 +3,7 @@ package me.chanjar.weixin.cp.api.impl;
 import java.io.IOException;
 
 import me.chanjar.weixin.common.util.crypto.SHA1;
+import me.chanjar.weixin.cp.api.WxCpOAuth2Service;
 import me.chanjar.weixin.cp.api.WxCpSuiteComponentService;
 import me.chanjar.weixin.cp.api.WxCpSuiteService;
 import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
@@ -22,6 +23,8 @@ public abstract class WxCpSuiteServiceAbstractImpl<H, P> implements WxCpSuiteSer
   private WxCpSuiteComponentService wxCpSuiteComponentService = new WxCpSuiteComponentServiceImpl(this);
   private WxCpSuiteConfigStorage wxCpSuiteConfigStorage;
 
+  private WxCpOAuth2Service oauth2Service = new WxCpSuiteOAuth2ServiceImpl(this);
+
   @Override
   public WxCpSuiteComponentService getWxCpSuiteComponentService() {
     return wxCpSuiteComponentService;
@@ -30,6 +33,11 @@ public abstract class WxCpSuiteServiceAbstractImpl<H, P> implements WxCpSuiteSer
   @Override
   public WxCpSuiteConfigStorage getWxCpSuiteConfigStorage() {
     return wxCpSuiteConfigStorage;
+  }
+
+  @Override
+  public WxCpOAuth2Service getOauth2Service() {
+    return oauth2Service;
   }
 
   @Override

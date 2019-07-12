@@ -66,6 +66,8 @@ public interface WxCpSuiteConfigStorage {
 
   WxCpConfigStorage getWxCpConfigStorage(String authCorpId);
 
+  String getOauth2redirectUri();
+
   /**
    * http client builder
    *

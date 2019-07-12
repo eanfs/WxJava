@@ -9,6 +9,8 @@ public interface WxCpSuiteService {
 
   WxCpSuiteConfigStorage getWxCpSuiteConfigStorage();
 
+  WxCpOAuth2Service getOauth2Service();
+
   void setWxCpSuiteConfigStorage(WxCpSuiteConfigStorage wxCpSuiteConfigStorage);
 
   boolean checkSignature(String msgSignature, String timestamp, String nonce, String data);
