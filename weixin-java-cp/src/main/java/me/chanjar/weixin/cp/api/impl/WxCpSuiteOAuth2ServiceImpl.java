@@ -94,7 +94,8 @@ public class WxCpSuiteOAuth2ServiceImpl implements WxCpOAuth2Service {
     String responseText = this.mainService.get(url, null);
     JsonElement je = new JsonParser().parse(responseText);
     JsonObject jo = je.getAsJsonObject();
-    return new String[]{GsonHelper.getString(jo, "UserId"),
+    return new String[]{GsonHelper.getString(jo, "CorpId"),
+      GsonHelper.getString(jo, "UserId"),
       GsonHelper.getString(jo, "DeviceId"),
       GsonHelper.getString(jo, "OpenId"),
       GsonHelper.getString(jo, "user_ticket"),
