@@ -26,7 +26,7 @@ public class WxCpSuiteInMemoryConfigStorage implements WxCpSuiteConfigStorage {
   private volatile String token;
   private volatile String aesKey;
 
-  protected volatile String oauth2redirectUri;
+  private volatile String oauth2redirectUri;
 
   private Map<String, Token> authCorpAccessTokens = new ConcurrentHashMap<>();
   private Map<String, String> authCorpPermanentCodes = new ConcurrentHashMap<>();
