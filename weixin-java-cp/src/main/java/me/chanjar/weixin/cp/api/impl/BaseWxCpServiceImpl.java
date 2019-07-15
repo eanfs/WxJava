@@ -260,6 +260,7 @@ public abstract class BaseWxCpServiceImpl<H, P> implements WxCpService, RequestH
       return result;
     } catch (WxErrorException e) {
       WxError error = e.getError();
+      this.log.error("\n【请求地址】: {}\n【请求参数】：{}\n【错误信息】：{}", uriWithAccessToken, dataForLog, error);
       /*
        * 发生以下情况时尝试刷新access_token
        * 40001 获取access_token时AppSecret错误，或者access_token无效
