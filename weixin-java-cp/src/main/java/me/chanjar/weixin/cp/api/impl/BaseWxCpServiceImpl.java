@@ -270,13 +270,22 @@ public abstract class BaseWxCpServiceImpl<H, P> implements WxCpService, RequestH
 
     String uriWithAccessToken = uri + (uri.contains("?") ? "&" : "?") + "access_token=" + accessToken;
 
+    int retryTimes = 0;
     try {
       T result = executor.execute(uriWithAccessToken, data);
       log.debug("\n【请求地址】: {}\n【请求参数】：{}\n【响应数据】：{}", uriWithAccessToken, dataForLog, result);
       return result;
     } catch (WxErrorException e) {
+
+      if (retryTimes + 1 > this.maxRetryTimes) {
+        this.log.warn("重试达到最大次数【{}】", this.maxRetryTimes);
+        //最后一次重试失败后，直接抛出异常，不再等待
+        throw new RuntimeException("微信服务端异常，超出重试次数");
+      }
+
       WxError error = e.getError();
       this.log.error("\n【请求地址】: {}\n【请求参数】：{}\n【错误信息】：{}", uriWithAccessToken, dataForLog, error);
+
       /*
        * 发生以下情况时尝试刷新access_token
        * 40001 获取access_token时AppSecret错误，或者access_token无效
@@ -285,6 +294,7 @@ public abstract class BaseWxCpServiceImpl<H, P> implements WxCpService, RequestH
        */
       if (error.getErrorCode() == 42001 || error.getErrorCode() == 40001 || error.getErrorCode() == 40014) {
         // 强制设置wxCpConfigStorage它的access token过期了，这样在下一次请求里就会刷新access token
+        retryTimes++;
         this.configStorage.expireAccessToken();
         return execute(executor, uri, data);
       }
