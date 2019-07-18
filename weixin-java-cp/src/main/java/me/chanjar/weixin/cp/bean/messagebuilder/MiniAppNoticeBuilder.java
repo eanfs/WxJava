@@ -72,6 +72,11 @@ public final class MiniAppNoticeBuilder extends BaseBuilder<MiniAppNoticeBuilder
     return this;
   }
 
+  public MiniAppNoticeBuilder addContentItem(List<MpContentItem> items) {
+    this.contentItem = items;
+    return this;
+  }
+
   public List<MpContentItem> getContentItem() {
     return contentItem;
   }
