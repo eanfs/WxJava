@@ -18,7 +18,7 @@ public class WxCpSuiteJedisConfigStorage extends WxCpSuiteInMemoryConfigStorage 
   private static final String SUITE_ACCESS_TOKEN_KEY = "wx_cp_suite_access_token:";
   private static final String SUITE_VERIFY_TICKET_KEY = "wx_cp_suite_verify_ticket:";
   private static final String AUTH_CORP_PERMANENT_CODE_KEY = "wx_cp_auth_corp_permanent_code:";
-  private static final String AUTH_CORP_ACCESS_TOKEN_KEY = "wx_cp_auth_corp_access_token_code:";
+  private static final String AUTH_CORP_ACCESS_TOKEN_KEY = "wx_cp_auth_corp_access_token:";
 
   private String keyPrefix;
 
