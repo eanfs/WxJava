@@ -273,7 +273,28 @@ public class WxCpMessage implements Serializable {
         messageJson.add("mpnews", newsJsonObject);
         break;
       }
-      case TASKCARD: {
+      case KefuMsgType.MINIPROGRAMNOTICE: {
+
+        JsonObject miniProgramPage = new JsonObject();
+        miniProgramPage.addProperty("title", this.getTitle());
+        miniProgramPage.addProperty("appid", this.getAppId());
+        miniProgramPage.addProperty("page", this.getPage());
+        miniProgramPage.addProperty("description", this.getDescription());
+        miniProgramPage.addProperty("emphasis_first_item", this.getEmphasisFirstItem());
+
+        JsonArray articleJsonArray = new JsonArray();
+        for (MpContentItem article : this.getContentItems()) {
+          JsonObject articleJson = new JsonObject();
+          articleJson.addProperty("key", article.getKey());
+          articleJson.addProperty("value", article.getValue());
+          articleJsonArray.add(articleJson);
+        }
+        miniProgramPage.add("content_item", articleJsonArray);
+        messageJson.add("miniprogram_notice", miniProgramPage);
+
+        break;
+      }
+      case KefuMsgType.TASKCARD: {
         JsonObject text = new JsonObject();
         text.addProperty("title", this.getTitle());
         text.addProperty("description", this.getDescription());
