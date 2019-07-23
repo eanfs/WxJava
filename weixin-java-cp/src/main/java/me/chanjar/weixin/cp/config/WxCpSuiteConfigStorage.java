@@ -34,9 +34,9 @@ public interface WxCpSuiteConfigStorage {
   boolean isSuiteVerifyTicketExpired();
 
 
-//  String getCorpId();
-//
-//  String getCorpSecret();
+  String getCorpId();
+
+  String getCorpSecret();
 
   String getSuiteId();
 
