@@ -77,7 +77,7 @@ public class WxCpSuiteOAuth2ServiceImpl implements WxCpOAuth2Service {
 
   public String buildQRConnectUrl(String redirectUri, String state, String userType) {
     StringBuilder url = new StringBuilder("https://open.work.weixin.qq.com/wwopen/sso/3rd_qrConnect?");
-    url.append("appid=").append(this.mainService.getWxCpSuiteConfigStorage().getSuiteId());
+    url.append("appid=").append(this.mainService.getWxCpSuiteConfigStorage().getCorpId());
     url.append("&usertype=").append(userType);
     url.append("&redirect_uri=").append(URIUtil.encodeURIComponent(redirectUri));
 
