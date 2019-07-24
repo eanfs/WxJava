@@ -4,11 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.util.http.URIUtil;
 import me.chanjar.weixin.common.util.json.GsonHelper;
 import me.chanjar.weixin.cp.api.WxCpOAuth2Service;
 import me.chanjar.weixin.cp.api.WxCpService;
+import me.chanjar.weixin.cp.bean.WxCpProviderAuthInfo;
 import me.chanjar.weixin.cp.bean.WxCpUserDetail;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 
@@ -81,6 +83,11 @@ public class WxCpOAuth2ServiceImpl implements WxCpOAuth2Service {
       url.append("&state=").append(state);
     }
     return url.toString();
+  }
+
+  @Override
+  public WxCpProviderAuthInfo getAuthUserInfo(String authCode) throws WxErrorException {
+    throw new WxErrorException(WxError.builder().errorMsg("Not Implements").build());
   }
 
   @Override

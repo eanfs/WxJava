@@ -10,7 +10,6 @@ import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.api.WxCpSuiteComponentService;
 import me.chanjar.weixin.cp.api.WxCpSuiteService;
 import me.chanjar.weixin.cp.bean.*;
-import me.chanjar.weixin.cp.bean.message.WxCpSuiteXmlMessage;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
 import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +37,9 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   /**
    * 全局的是否正在刷新access token的锁
    */
+
+  protected final Object globalProviderAccessTokenRefreshLock = new Object();
+
   protected final Object globalAccessTokenRefreshLock = new Object();
 
   protected final Object globalPermanentCodeLock = new Object();
@@ -70,6 +72,30 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
 
 
   @Override
+  public String getProviderAccessToken(boolean forceRefresh) throws WxErrorException {
+
+    synchronized (this.globalProviderAccessTokenRefreshLock) {
+      if (this.getWxCpSuiteConfigStorage().isProviderAccessTokenExpired() || forceRefresh) {
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("corpid", this.getWxCpSuiteConfigStorage().getCorpId());
+        jsonObject.addProperty("provider_secret", this.getWxCpSuiteConfigStorage().getProviderSecret());
+        String resultContent = this.post(GET_PROVIDER_ACCESS_TOKEN, jsonObject.toString());
+        WxError error = WxError.fromJson(resultContent, WxType.CP);
+        if (error.getErrorCode() != 0) {
+          throw new WxErrorException(error);
+        }
+        WxCpProviderAccessToken accessToken = WxCpProviderAccessToken.fromJson(resultContent);
+        this.getWxCpSuiteConfigStorage().updateProviderAccessToken(
+          accessToken.getProviderAccessToken(), accessToken.getExpiresIn());
+
+      }
+    }
+    return this.getWxCpSuiteConfigStorage().getProviderAccessToken();
+  }
+
+
+  @Override
   public String getSuiteAccessToken(boolean forceRefresh) throws WxErrorException {
 
     synchronized (this.globalAccessTokenRefreshLock) {
@@ -96,7 +122,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   @Override
   public String getPreAuthCode() throws WxErrorException {
 //    JsonObject jsonObject = new JsonObject();
-//    jsonObject.addProperty("suite_access_token", this.getWxCpSuiteConfigStorage().getSuiteAccessToken());
+//    jsonObject.addProperty("suite_access_token", this.getWxCpSuiteConfigStorage().getProviderAccessToken());
     String resultContent = get(PRE_AUTH_CODE_URL);
     WxError error = WxError.fromJson(resultContent, WxType.CP);
     if (error.getErrorCode() != 0) {
@@ -122,7 +148,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
       }
       if (StringUtils.isEmpty(permanentCode)) {
         final String url = PERMANENT_CODE_URL;
-//      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
+//      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getProviderAccessToken();
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("auth_code", preAuthCode);
         String resultContent = post(url, jsonObject.toString());
@@ -143,7 +169,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   @Override
   public WxCpAuthInfo getAuthInfo(String authCorpId, String permanentCode) throws WxErrorException {
     final String url = AUTH_INFO_URL;
-//      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getSuiteAccessToken();
+//      + "?suite_access_token=" + this.getWxCpSuiteConfigStorage().getProviderAccessToken();
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("auth_corpid", authCorpId);
     jsonObject.addProperty("permanent_code", permanentCode);

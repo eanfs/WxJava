@@ -1,6 +1,7 @@
 package me.chanjar.weixin.cp.api;
 
 import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.cp.bean.WxCpProviderAuthInfo;
 import me.chanjar.weixin.cp.bean.WxCpUserDetail;
 
 /**
@@ -117,4 +118,26 @@ public interface WxCpOAuth2Service {
    * @param userTicket 成员票据
    */
   WxCpUserDetail getUserDetail(String userTicket) throws WxErrorException;
+
+  /**
+   * <pre>
+   *     获取登录用户信息
+   * 第三方可通过如下接口，获取登录用户的信息。建议用户以返回信息中的corpid及userid为主键匹配用户。
+   *
+   * 请求方式：POST（HTTPS）
+   * 请求地址： https://qyapi.weixin.qq.com/cgi-bin/service/get_login_info?access_token=PROVIDER_ACCESS_TOKEN
+   *
+   * 请求包体：
+   *
+   *  {
+   *     "auth_code":"xxxxx"
+   *  }
+   * 参数说明：
+   *
+   * 参数	是否必须	说明
+   * access_token	是	授权登录服务商的网站时，使用应用提供商的provider_access_token，获取方法参见服务商的凭证
+   * auth_code	是	oauth2.0授权企业微信管理员登录产生的code，最长为512字节。只能使用一次，5分钟未被使用自动过期
+   * <pre/>
+   */
+  WxCpProviderAuthInfo getAuthUserInfo(String authCode) throws WxErrorException;
 }

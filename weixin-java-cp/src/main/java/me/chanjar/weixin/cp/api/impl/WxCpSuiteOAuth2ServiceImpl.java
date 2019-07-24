@@ -9,8 +9,8 @@ import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.util.http.URIUtil;
 import me.chanjar.weixin.common.util.json.GsonHelper;
 import me.chanjar.weixin.cp.api.WxCpOAuth2Service;
-import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.api.WxCpSuiteService;
+import me.chanjar.weixin.cp.bean.WxCpProviderAuthInfo;
 import me.chanjar.weixin.cp.bean.WxCpUserDetail;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 
@@ -116,5 +116,18 @@ public class WxCpSuiteOAuth2ServiceImpl implements WxCpOAuth2Service {
     param.addProperty("user_ticket", userTicket);
     String responseText = this.mainService.post(url, param.toString());
     return WxCpGsonBuilder.create().fromJson(responseText, WxCpUserDetail.class);
+  }
+
+  @Override
+  public WxCpProviderAuthInfo getAuthUserInfo(String authCode) throws WxErrorException {
+
+    String url = String.format("https://qyapi.weixin.qq.com/cgi-bin/service/get_login_info?access_token=%s",
+      this.mainService.getWxCpSuiteComponentService().getProviderAccessToken(false));
+    JsonObject param = new JsonObject();
+    param.addProperty("auth_code", authCode);
+    String responseText = this.mainService.post(url, param.toString());
+    JsonElement je = new JsonParser().parse(responseText);
+    JsonObject jo = je.getAsJsonObject();
+    return WxCpGsonBuilder.create().fromJson(responseText, WxCpProviderAuthInfo.class);
   }
 }

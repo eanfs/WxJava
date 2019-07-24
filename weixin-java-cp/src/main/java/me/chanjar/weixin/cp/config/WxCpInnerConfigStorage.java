@@ -35,6 +35,11 @@ public class WxCpInnerConfigStorage implements WxCpConfigStorage {
   }
 
   @Override
+  public void updateAccessToken(String accessToken, int expiresInSeconds) {
+
+  }
+
+  @Override
   public void updateAccessToken(Integer agentId, WxAccessToken accessToken) {
 
   }

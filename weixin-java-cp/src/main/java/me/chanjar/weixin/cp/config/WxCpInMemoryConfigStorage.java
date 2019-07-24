@@ -1,12 +1,5 @@
 package me.chanjar.weixin.cp.config;
 
-import java.io.File;
-import java.util.Hashtable;
-import java.util.Map;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import me.chanjar.weixin.common.bean.WxAccessToken;
 import me.chanjar.weixin.common.util.http.apache.ApacheHttpClientBuilder;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
@@ -63,6 +56,12 @@ public class WxCpInMemoryConfigStorage implements WxCpConfigStorage {
   @Override
   public void expireAccessToken() {
     this.expiresTime = 0;
+  }
+
+  @Override
+  public void updateAccessToken(String accessToken, int expiresInSeconds) {
+    this.accessToken = accessToken;
+    this.expiresTime = System.currentTimeMillis() + (expiresInSeconds - 200) * 1000L;
   }
 
   @Override

@@ -21,6 +21,8 @@ public interface WxCpConfigStorage {
    */
   void expireAccessToken();
 
+  void updateAccessToken(String accessToken, int expiresIn);
+
   void updateAccessToken(Integer agentId, WxAccessToken accessToken);
 
   void updateAccessToken(Integer agentId, String accessToken, int expiresIn);
