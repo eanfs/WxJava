@@ -3,8 +3,6 @@ package me.chanjar.weixin.cp.config;
 import me.chanjar.weixin.common.bean.WxAccessToken;
 import me.chanjar.weixin.common.util.http.apache.ApacheHttpClientBuilder;
 
-import java.io.File;
-
 /**
  * 企业微信第三方应用配置存储
  *
@@ -13,6 +11,12 @@ import java.io.File;
  */
 public interface WxCpSuiteConfigStorage {
 
+
+  String getProviderAccessToken();
+
+  boolean isProviderAccessTokenExpired();
+
+  void updateProviderAccessToken(String accessToken, int expiresInSeconds);
 
   String getSuiteAccessToken();
 
@@ -37,6 +41,8 @@ public interface WxCpSuiteConfigStorage {
   String getCorpId();
 
   String getCorpSecret();
+
+  String getProviderSecret();
 
   String getSuiteId();
 

@@ -4,7 +4,6 @@ import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.cp.bean.WxCpAuthInfo;
 import me.chanjar.weixin.cp.bean.WxCpMaJsCode2SessionResult;
 import me.chanjar.weixin.cp.bean.WxCpXmlMessage;
-import me.chanjar.weixin.cp.bean.message.WxCpSuiteXmlMessage;
 import me.chanjar.weixin.cp.config.WxCpSuiteConfigStorage;
 
 /**
@@ -26,10 +25,13 @@ public interface WxCpSuiteComponentService {
 
   String MINIAPP_JSCODE_2_SESSION = "https://qyapi.weixin.qq.com/cgi-bin/service/miniprogram/jscode2session";
 
+  String GET_PROVIDER_ACCESS_TOKEN = "https://qyapi.weixin.qq.com/cgi-bin/service/get_provider_token";
 
   String route(WxCpXmlMessage wxMessage) throws WxErrorException;
 
   WxCpSuiteConfigStorage getWxCpSuiteConfigStorage();
+
+  String getProviderAccessToken(boolean forceRefresh) throws WxErrorException;
 
   String getSuiteAccessToken(boolean forceRefresh) throws WxErrorException;
 

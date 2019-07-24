@@ -18,11 +18,16 @@ public class WxCpSuiteInMemoryConfigStorage implements WxCpSuiteConfigStorage {
   private volatile String suiteAccessToken;
   private volatile long suiteAccessTokenExpiresTime;
 
+
+  private volatile String providerAccessToken;
+  private volatile long providerAccessTokenExpiresTime;
+
   private volatile String suiteVerifyTicket;
   private volatile long suiteVerifyTicketExpiresTime;
 
   private volatile String corpId;
   private volatile String corpSecret;
+  private volatile String providerSecret;
   private volatile String token;
   private volatile String aesKey;
 
@@ -80,6 +85,22 @@ public class WxCpSuiteInMemoryConfigStorage implements WxCpSuiteConfigStorage {
 
   public void setAesKey(String aesKey) {
     this.aesKey = aesKey;
+  }
+
+  @Override
+  public String getProviderAccessToken(){
+    return this.providerAccessToken;
+  }
+
+  @Override
+  public boolean isProviderAccessTokenExpired(){
+    return System.currentTimeMillis() > providerAccessTokenExpiresTime;
+  }
+
+  @Override
+  public void updateProviderAccessToken(String accessToken, int expiresInSeconds){
+    this.providerAccessToken = accessToken;
+    this.providerAccessTokenExpiresTime = System.currentTimeMillis() + (expiresInSeconds - 200) * 1000L;
   }
 
   @Override
@@ -145,6 +166,15 @@ public class WxCpSuiteInMemoryConfigStorage implements WxCpSuiteConfigStorage {
     this.corpSecret = corpSecret;
   }
 
+
+  @Override
+  public String getProviderSecret() {
+    return providerSecret;
+  }
+
+  public void setProviderSecret(String providerSecret) {
+    this.providerSecret = providerSecret;
+  }
 
   @Override
   public String getAuthCorpAccessToken(String authCorpId) {

@@ -6,12 +6,14 @@ import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.util.http.URIUtil;
 import me.chanjar.weixin.common.util.json.GsonHelper;
 import me.chanjar.weixin.cp.api.WxCpOAuth2Service;
 import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.bean.WxCpOauth2UserInfo;
+import me.chanjar.weixin.cp.bean.WxCpProviderAuthInfo;
 import me.chanjar.weixin.cp.bean.WxCpUserDetail;
 import me.chanjar.weixin.cp.constant.WxCpApiPathConsts;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
@@ -90,6 +92,12 @@ public class WxCpOAuth2ServiceImpl implements WxCpOAuth2Service {
 
   @Override
   public WxCpOauth2UserInfo getUserInfo(String code) throws WxErrorException {
+  public WxCpProviderAuthInfo getAuthUserInfo(String authCode) throws WxErrorException {
+    throw new WxErrorException(WxError.builder().errorMsg("Not Implements").build());
+  }
+
+  @Override
+  public String[] getUserInfo(String code) throws WxErrorException {
     return this.getUserInfo(this.mainService.getWxCpConfigStorage().getAgentId(), code);
   }
 
