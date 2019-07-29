@@ -87,7 +87,13 @@ public class WxCpServiceApacheHttpClientImpl extends BaseWxCpServiceImpl<Closeab
         }
 
         WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
-        this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(), accessToken.getExpiresIn());
+        if (this.configStorage.getAgentId() == null) {
+          // update for suite auth corp access token
+          this.configStorage.updateAccessToken(accessToken.getAccessToken(), accessToken.getExpiresIn());
+        } else {
+          // update for agent auth corp access token
+          this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(), accessToken.getExpiresIn());
+        }
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

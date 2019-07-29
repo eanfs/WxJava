@@ -131,7 +131,12 @@ public class WxCpSuiteJedisConfigStorage extends WxCpSuiteInMemoryConfigStorage 
     }
   }
 
-
+  @Override
+  public void expireAuthCorpAccessToken(String authCorpId) {
+    try (Jedis jedis = this.jedisPool.getResource()) {
+      jedis.expire(this.getKey(this.authCorpAccessTokenKey, authCorpId), 0);
+    }
+  }
 
   @Override
   public void updateAuthCorpAccessToken(String authCorpId, String accessToken, int expiresInSeconds) {
