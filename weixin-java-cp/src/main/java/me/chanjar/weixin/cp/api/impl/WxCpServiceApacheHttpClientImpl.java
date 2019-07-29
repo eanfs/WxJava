@@ -8,7 +8,6 @@ import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.util.http.HttpType;
 import me.chanjar.weixin.common.util.http.apache.ApacheHttpClientBuilder;
 import me.chanjar.weixin.common.util.http.apache.DefaultApacheHttpClientBuilder;
-import me.chanjar.weixin.cp.api.WxCpOAService;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
 import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
@@ -68,7 +67,13 @@ public class WxCpServiceApacheHttpClientImpl extends BaseWxCpServiceImpl<Closeab
         }
 
         WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
-        this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(), accessToken.getExpiresIn());
+        if (this.configStorage.getAgentId() == null) {
+          // update for suite auth corp access token
+          this.configStorage.updateAccessToken(accessToken.getAccessToken(), accessToken.getExpiresIn());
+        } else {
+          // update for agent auth corp access token
+          this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(), accessToken.getExpiresIn());
+        }
       } catch (IOException e) {
         throw new RuntimeException(e);
       }

@@ -24,28 +24,36 @@ public class WxCpInnerConfigStorage implements WxCpConfigStorage {
     return wxCpSuiteConfigStorage.getAuthCorpAccessToken(authCorpId);
   }
 
+  public Lock getAccessTokenLock() {
+    return this.accessTokenLock;
+  }
+
+
   @Override
   public boolean isAccessTokenExpired() {
-    return false;
+    return wxCpSuiteConfigStorage.isAuthCorpAccessTokenExpired(authCorpId);
+
   }
 
   @Override
   public void expireAccessToken() {
-
+    wxCpSuiteConfigStorage.expireAuthCorpAccessToken(authCorpId);
   }
 
   @Override
   public void updateAccessToken(String accessToken, int expiresInSeconds) {
+    wxCpSuiteConfigStorage.updateAuthCorpAccessToken(authCorpId, accessToken, expiresInSeconds);
 
   }
 
   @Override
   public void updateAccessToken(Integer agentId, WxAccessToken accessToken) {
-
+    wxCpSuiteConfigStorage.updateAuthCorpAccessToken(authCorpId, accessToken.getAccessToken(), accessToken.getExpiresIn());
   }
 
   @Override
   public void updateAccessToken(Integer agentId, String accessToken, int expiresIn) {
+    wxCpSuiteConfigStorage.updateAuthCorpAccessToken(authCorpId, accessToken, expiresIn);
 
   }
 

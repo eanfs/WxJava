@@ -66,6 +66,8 @@ public interface WxCpSuiteConfigStorage {
 
   boolean isAuthCorpAccessTokenExpired(String authCorpId);
 
+  void expireAuthCorpAccessToken(String authCorpId);
+
   String getAuthCorpPermanentCode(String authCorpId);
 
   void updateAuthCorpPermanentCode(String authCorpId, String permanentCode);

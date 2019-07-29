@@ -188,6 +188,12 @@ public class WxCpSuiteInMemoryConfigStorage implements WxCpSuiteConfigStorage {
   }
 
   @Override
+  public void expireAuthCorpAccessToken(String authCorpId) {
+    expireToken(authCorpAccessTokens, authCorpId);
+
+  }
+
+  @Override
   public boolean isAuthCorpAccessTokenExpired(String authCorpId) {
     return getTokenString(authCorpAccessTokens, authCorpId) == null;
   }
