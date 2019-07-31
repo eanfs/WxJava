@@ -232,7 +232,7 @@ public class WxCpMessageRouter {
     String messageId;
     if (wxMessage.getMsgId() == null) {
       if (wxMessage.getInfoType() == null) {
-        messageId = String.valueOf(wxMessage.getCreateTime())
+        messageId = String.valueOf(wxMessage.getTimeStamp())
           + "-" + StringUtils.trimToEmpty(String.valueOf(wxMessage.getAgentId()))
           + "-" + StringUtils.trimToEmpty(wxMessage.getFromUserName())
           + "-" + StringUtils.trimToEmpty(wxMessage.getEventKey())
@@ -253,6 +253,9 @@ public class WxCpMessageRouter {
         .append("-").append(wxMessage.getFromUserName());
       if (StringUtils.isNotEmpty(wxMessage.getUserId())) {
         builder.append("_").append(StringUtils.trimToEmpty(wxMessage.getUserId()));
+      }
+      if (wxMessage.getTimeStamp() != null) {
+        builder.append("_").append(StringUtils.trimToEmpty(String.valueOf(wxMessage.getTimeStamp())));
       }
 
       messageId = builder.toString();
