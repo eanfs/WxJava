@@ -1,18 +1,5 @@
 package me.chanjar.weixin.cp.message;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import me.chanjar.weixin.common.api.WxErrorExceptionHandler;
 import me.chanjar.weixin.common.api.WxMessageDuplicateChecker;
 import me.chanjar.weixin.common.api.WxMessageInMemoryDuplicateChecker;
@@ -24,6 +11,18 @@ import me.chanjar.weixin.common.util.LogExceptionHandler;
 import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.bean.WxCpXmlMessage;
 import me.chanjar.weixin.cp.bean.WxCpXmlOutMessage;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * <pre>
@@ -224,7 +223,6 @@ public class WxCpMessageRouter {
 
   /**
    * 处理微信消息.
-   *
    */
   public WxCpXmlOutMessage route(final WxCpXmlMessage wxMessage) {
     return this.route(wxMessage, new HashMap<String, Object>(2));
@@ -236,22 +234,28 @@ public class WxCpMessageRouter {
       if (wxMessage.getInfoType() == null) {
         messageId = String.valueOf(wxMessage.getCreateTime())
           + "-" + StringUtils.trimToEmpty(String.valueOf(wxMessage.getAgentId()))
-          + "-" + wxMessage.getFromUserName()
+          + "-" + StringUtils.trimToEmpty(wxMessage.getFromUserName())
           + "-" + StringUtils.trimToEmpty(wxMessage.getEventKey())
           + "-" + StringUtils.trimToEmpty(wxMessage.getEvent())
+          + "-" + StringUtils.trimToEmpty(wxMessage.getUserId())
         ;
       } else {
-        messageId = String.valueOf(wxMessage.getTimeStamp())
+        messageId = String.valueOf(wxMessage.getCreateTime())
           + "-" + StringUtils.trimToEmpty(String.valueOf(wxMessage.getSuiteId()))
           + "-" + StringUtils.trimToEmpty(String.valueOf(wxMessage.getAuthCorpId()))
-          + "-" + wxMessage.getFromUserName()
-          + "-" + StringUtils.trimToEmpty(wxMessage.getInfoType());
+          + "-" + StringUtils.trimToEmpty(wxMessage.getFromUserName())
+          + "-" + StringUtils.trimToEmpty(wxMessage.getInfoType())
+          + "-" + StringUtils.trimToEmpty(wxMessage.getUserId());
       }
     } else {
-      messageId = new StringBuilder().append(wxMessage.getMsgId())
+      StringBuilder builder = new StringBuilder().append(wxMessage.getMsgId())
         .append("-").append(wxMessage.getCreateTime())
-        .append("-").append(wxMessage.getFromUserName())
-        .toString();
+        .append("-").append(wxMessage.getFromUserName());
+      if (StringUtils.isNotEmpty(wxMessage.getUserId())) {
+        builder.append("_").append(StringUtils.trimToEmpty(wxMessage.getUserId()));
+      }
+
+      messageId = builder.toString();
     }
 
     return this.messageDuplicateChecker.isDuplicate(messageId);
