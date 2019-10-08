@@ -221,4 +221,36 @@ public class WxCpConsts {
     public static final String SUITE_TICKET = "suite_ticket";
 
   }
+
+  /**
+   * 企业微信端推送过来的事件类型.
+   * 参考文档：https://work.weixin.qq.com/api/doc#15219
+   */
+  public static class SuitePayEventType {
+    /**
+     * 下单成功通知.
+     */
+    public static final String OPEN_ORDER = "open_order";
+
+    /**
+     * 改单通知.
+     */
+    public static final String CHANGE_ORDER = "change_order";
+
+    /**
+     * 支付成功通知.
+     */
+    public static final String PAY_SUCCESS = "pay_for_app_success";
+
+    /**
+     * 退款通知.
+     */
+    public static final String REFUND = "refund";
+
+    /**
+     * 付费版本变更通知.
+     */
+    public static final String CHANGE_EDITION = "change_editon";
+
+  }
 }
