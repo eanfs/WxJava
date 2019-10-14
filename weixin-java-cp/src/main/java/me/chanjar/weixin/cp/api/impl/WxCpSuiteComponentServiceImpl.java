@@ -229,12 +229,42 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   }
 
   @Override
+  public WxCpAuthAdminInfo getAuthCorpAdmin(String authCorpId, Integer agentId) throws WxErrorException {
+    JsonObject jsonObject = new JsonObject();
+    jsonObject.addProperty("auth_corpid", authCorpId);
+    jsonObject.addProperty("agentid", agentId);
+    String result = post(CORP_ADMINISTRATOR_URL, jsonObject.toString());
+
+    WxError error = WxError.fromJson(result, WxType.CP);
+    if (error.getErrorCode() != 0) {
+      throw new WxErrorException(error);
+    }
+    return WxCpAuthAdminInfo.fromJson(result);
+  }
+
+  @Override
+  public void dialAuthCorp(String authCorpId, String caller, String callee) throws WxErrorException {
+    JsonObject jsonObject = new JsonObject();
+    jsonObject.addProperty("auth_corpid", authCorpId);
+    jsonObject.addProperty("caller", caller);
+    jsonObject.addProperty("callee", callee);
+    String result = post(AUTH_CORP_DIAL_URL, jsonObject.toString(), "provider_access_token");
+
+    WxError error = WxError.fromJson(result, WxType.CP);
+    if (error.getErrorCode() != 0) {
+      throw new WxErrorException(error);
+    }
+  }
+
+
+
+  @Override
   public WxCpMaJsCode2SessionResult jsCode2Session(String jsCode) throws WxErrorException {
     Map<String, String> params = new HashMap<>(2);
     params.put("js_code", jsCode);
     params.put("grant_type", "authorization_code");
 
-    String result = this.get(MINIAPP_JSCODE_2_SESSION + "?"+ Joiner.on("&").withKeyValueSeparator("=").join(params));
+    String result = this.get(MINIAPP_JSCODE_2_SESSION + "?" + Joiner.on("&").withKeyValueSeparator("=").join(params));
     return WxCpMaJsCode2SessionResult.fromJson(result);
   }
 
@@ -279,6 +309,9 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
 
   private String get(String uri, String accessTokenKey) throws WxErrorException {
     String componentAccessToken = getSuiteAccessToken(false);
+    if (StringUtils.equals(accessTokenKey , "provider_access_token")) {
+      componentAccessToken = getProviderAccessToken(false);
+    }
     String uriWithComponentAccessToken = uri + (uri.contains("?") ? "&" : "?") + accessTokenKey + "=" + componentAccessToken;
     try {
       return getWxCpSuiteService().get(uriWithComponentAccessToken, null);

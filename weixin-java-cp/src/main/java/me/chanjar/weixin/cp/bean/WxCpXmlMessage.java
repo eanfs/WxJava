@@ -412,6 +412,47 @@ public class WxCpXmlMessage implements Serializable {
   @XStreamAlias("ErrorCount")
   private Integer errorCount;
 
+
+  /**
+   * 应用市场付费接口
+   * 购买方corpid
+   * */
+  @XStreamAlias("PaidCorpId")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String paidCorpId;
+
+  /**
+   * 应用市场付费接口
+   * 订单号，付费订单的唯一标志。服务商可据此拉取购买信息。该OrderId由企业微信生成，不超过32个字符
+   * */
+  @XStreamAlias("OrderId")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String orderId;
+
+  /**
+   * 应用市场付费接口
+   * 原订单号
+   * */
+  @XStreamAlias("OldOrderId")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String oldOrderId;
+
+  /**
+   * 应用市场付费接口
+   * 改单后新的订单号，服务商可据此拉取购买信息。该OrderId由企业微信生成，不超过32个字符，每次修改价格都会产生新的订单号
+   * */
+  @XStreamAlias("NewOrderId")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String newOrderId;
+
+  /**
+   * 应用市场付费接口
+   * 下单操作者userid，当服务商或代理商代下单时，该字段为空
+   * */
+  @XStreamAlias("OperatorId")
+  @XStreamConverter(value = XStreamCDataConverter.class)
+  private String operatorId;
+
   @XStreamAlias("ScanCodeInfo")
   private ScanCodeInfo scanCodeInfo = new ScanCodeInfo();
 
