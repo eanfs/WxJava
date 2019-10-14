@@ -22,6 +22,8 @@ public class WxCpAuthInfo {
   @SerializedName(value = "auth_user_info")
   private WxCpUser authUserInfo;
 
+  @SerializedName(value = "edition_info")
+  private WxCpAuthEditionInfo editionInfo;
 
   public static WxCpAuthInfo fromJson(String json) {
     return WxCpGsonBuilder.create().fromJson(json, WxCpAuthInfo.class);

@@ -1,6 +1,7 @@
 package me.chanjar.weixin.cp.api;
 
 import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.cp.bean.WxCpAuthAdminInfo;
 import me.chanjar.weixin.cp.bean.WxCpAuthInfo;
 import me.chanjar.weixin.cp.bean.WxCpMaJsCode2SessionResult;
 import me.chanjar.weixin.cp.bean.WxCpXmlMessage;
@@ -22,6 +23,13 @@ public interface WxCpSuiteComponentService {
   String PERMANENT_CODE_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_permanent_code";
   String AUTH_INFO_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_auth_info";
   String CORP_TOKEN_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_corp_token";
+
+  // 获取应用的管理员列表
+  String CORP_ADMINISTRATOR_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/get_admin_list";
+
+  // 服务商公费电话接口
+  String AUTH_CORP_DIAL_URL = "https://qyapi.weixin.qq.com/cgi-bin/service/dial";
+
 
   String MINIAPP_JSCODE_2_SESSION = "https://qyapi.weixin.qq.com/cgi-bin/service/miniprogram/jscode2session";
 
@@ -48,6 +56,10 @@ public interface WxCpSuiteComponentService {
   WxCpService getWxCpServiceByAuthCorpId(String authCorpId);
 
   String getAuthCorpAccessToken(String authCorpId, boolean forceRefresh) throws WxErrorException;
+
+  WxCpAuthAdminInfo getAuthCorpAdmin(String authCorpId, Integer agentId) throws WxErrorException;
+
+  void dialAuthCorp(String authCorpId, String caller, String callee) throws WxErrorException;
 
   /**
    * 第三方小程序登录凭证校验
