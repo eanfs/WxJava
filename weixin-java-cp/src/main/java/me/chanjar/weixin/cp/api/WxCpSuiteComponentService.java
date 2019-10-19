@@ -51,6 +51,8 @@ public interface WxCpSuiteComponentService {
 
   WxCpAuthInfo getAuthInfo(String authCorpId, String permanentCode) throws WxErrorException;
 
+  void updatePermanentCode(String authCorpId, String permanentCode) throws WxErrorException;
+
   String getAuthCorpAccessToken(String authCorpId) throws WxErrorException;
 
   WxCpService getWxCpServiceByAuthCorpId(String authCorpId);

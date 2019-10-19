@@ -166,6 +166,15 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
     return authInfo;
   }
 
+  public void updatePermanentCode(String authCorpId, String permanentCode) throws WxErrorException {
+    synchronized (this.globalPermanentCodeLock) {
+      if (StringUtils.isNotEmpty(authCorpId) && StringUtils.isNotEmpty(permanentCode)) {
+        this.getWxCpSuiteConfigStorage().updateAuthCorpPermanentCode(authCorpId, permanentCode);
+      }
+    }
+  }
+
+
   @Override
   public WxCpAuthInfo getAuthInfo(String authCorpId, String permanentCode) throws WxErrorException {
     final String url = AUTH_INFO_URL;
@@ -257,7 +266,6 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
   }
 
 
-
   @Override
   public WxCpMaJsCode2SessionResult jsCode2Session(String jsCode) throws WxErrorException {
     Map<String, String> params = new HashMap<>(2);
@@ -309,7 +317,7 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
 
   private String get(String uri, String accessTokenKey) throws WxErrorException {
     String componentAccessToken = getSuiteAccessToken(false);
-    if (StringUtils.equals(accessTokenKey , "provider_access_token")) {
+    if (StringUtils.equals(accessTokenKey, "provider_access_token")) {
       componentAccessToken = getProviderAccessToken(false);
     }
     String uriWithComponentAccessToken = uri + (uri.contains("?") ? "&" : "?") + accessTokenKey + "=" + componentAccessToken;
