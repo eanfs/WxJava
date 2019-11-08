@@ -188,8 +188,6 @@ public class WxCpSuiteComponentServiceImpl implements WxCpSuiteComponentService 
       throw new WxErrorException(error);
     }
     WxCpAuthInfo authInfo = WxCpAuthInfo.fromJson(resultContent);
-    this.getWxCpSuiteConfigStorage().updateAuthCorpPermanentCode(authInfo.getAuthCorpInfo().getCorpId(), authInfo.getPermanentCode());
-
     return authInfo;
   }
 
