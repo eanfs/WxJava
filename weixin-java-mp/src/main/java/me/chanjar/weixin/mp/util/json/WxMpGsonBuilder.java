@@ -62,6 +62,8 @@ public class WxMpGsonBuilder {
     INSTANCE.registerTypeAdapter(WxMpUserBlacklistGetResult.class, new WxUserBlacklistGetResultGsonAdapter());
     INSTANCE.registerTypeAdapter(WxMpMemberCardUserInfoResult.class, new WxMpMemberCardUserInfoResultGsonAdapter());
     INSTANCE.registerTypeAdapter(WxMpMemberCardUpdateResult.class, new WxMpMemberCardUpdateResultGsonAdapter());
+    INSTANCE.registerTypeAdapter(WxMpFastRegisterResult.class, new WxMpFastRegisterAdapter());
+
     INSTANCE.registerTypeAdapter(WxMpMemberCardActivateTempInfoResult.class, new WxMpMemberCardActivateTempInfoResultGsonAdapter());
     INSTANCE.registerTypeAdapter(WxMpFastRegisterResult.class, new WxMpFastRegisterAdapter());
 

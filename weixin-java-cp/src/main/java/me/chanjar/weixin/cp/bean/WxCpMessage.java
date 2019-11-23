@@ -3,6 +3,12 @@ package me.chanjar.weixin.cp.bean;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Data;
+import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.cp.bean.article.MpContentItem;
+import me.chanjar.weixin.cp.bean.article.MpnewsArticle;
+import me.chanjar.weixin.cp.bean.article.NewArticle;
+import me.chanjar.weixin.cp.bean.messagebuilder.*;
+import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 import me.chanjar.weixin.common.api.WxConsts.KefuMsgType;
 import me.chanjar.weixin.cp.bean.article.MpnewsArticle;
 import me.chanjar.weixin.cp.bean.article.NewArticle;
@@ -51,6 +57,7 @@ public class WxCpMessage implements Serializable {
   private String page;
   private Boolean emphasisFirstItem;
   private Map<String, String> contentItems;
+  private List<MpContentItem> contentItems = new ArrayList<>();
 
   /**
    * 任务卡片特有的属性.
@@ -122,6 +129,13 @@ public class WxCpMessage implements Serializable {
   }
 
   /**
+   * 获得小程序消息 builder.
+   */
+  public static MiniAppNoticeBuilder MPNOTICE() {
+    return new MiniAppNoticeBuilder();
+  }
+
+  /*
    * 获得任务卡片消息builder.
    */
   public static TaskCardBuilder TASKCARD() {

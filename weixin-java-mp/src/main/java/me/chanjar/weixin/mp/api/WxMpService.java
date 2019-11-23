@@ -538,6 +538,8 @@ public interface WxMpService {
 
   void setAiOpenService(WxMpAiOpenService aiOpenService);
 
+  void setRegisterAppService(WxMpRegisterAppService registerAppService);
+  
   void setMarketingService(WxMpMarketingService marketingService);
 
   void setOcrService(WxMpOcrService ocrService);

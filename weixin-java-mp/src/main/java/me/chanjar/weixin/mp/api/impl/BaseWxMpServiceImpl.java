@@ -75,6 +75,8 @@ public abstract class BaseWxMpServiceImpl<H, P> implements WxMpService, RequestH
   private WxMpMassMessageService massMessageService = new WxMpMassMessageServiceImpl(this);
   private WxMpAiOpenService aiOpenService = new WxMpAiOpenServiceImpl(this);
   private WxMpWifiService wifiService = new WxMpWifiServiceImpl(this);
+  private WxMpRegisterAppService registerAppService = new WxMpRegisterAppServiceImpl(this);
+
   private WxMpMarketingService marketingService = new WxMpMarketingServiceImpl(this);
   private WxMpCommentService commentService = new WxMpCommentServiceImpl(this);
   private WxMpOcrService ocrService = new WxMpOcrServiceImpl(this);
