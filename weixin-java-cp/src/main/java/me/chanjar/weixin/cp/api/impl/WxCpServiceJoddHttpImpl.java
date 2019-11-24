@@ -1,15 +1,12 @@
 package me.chanjar.weixin.cp.api.impl;
 
-import jodd.http.HttpConnectionProvider;
-import jodd.http.HttpRequest;
-import jodd.http.HttpResponse;
-import jodd.http.JoddHttp;
-import jodd.http.ProxyInfo;
+import jodd.http.*;
 import me.chanjar.weixin.common.WxType;
 import me.chanjar.weixin.common.bean.WxAccessToken;
 import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.util.http.HttpType;
+import me.chanjar.weixin.cp.api.WxCpSuiteService;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
 import me.chanjar.weixin.cp.constant.WxCpApiPathConsts;
 
@@ -50,24 +47,23 @@ public class WxCpServiceJoddHttpImpl extends BaseWxCpServiceImpl<HttpConnectionP
       request.withConnectionProvider(httpClient);
       HttpResponse response = request.send();
 
-          String resultContent = response.bodyText();
-          WxError error = WxError.fromJson(resultContent, WxType.CP);
-          if (error.getErrorCode() != 0) {
-            throw new WxErrorException(error);
-          }
-          WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
-          this.configStorage.updateAccessToken( this.configStorage.getAgentId(),
-            accessToken.getAccessToken(), accessToken.getExpiresIn());
-        }
+      String resultContent = response.bodyText();
+      WxError error = WxError.fromJson(resultContent, WxType.CP);
+      if (error.getErrorCode() != 0) {
+        throw new WxErrorException(error);
       }
       WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
-      this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(), accessToken.getExpiresIn());
+      this.configStorage.updateAccessToken(this.configStorage.getAgentId(),
+        accessToken.getAccessToken(), accessToken.getExpiresIn());
+
+      return this.configStorage.getAccessToken();
     }
-    return this.configStorage.getAccessToken();
+
   }
 
+
   @Override
-  public void initHttp() {
+  public void initHttp(){
     if (this.configStorage.getHttpProxyHost() != null && this.configStorage.getHttpProxyPort() > 0) {
       httpProxy = new ProxyInfo(ProxyInfo.ProxyType.HTTP, configStorage.getHttpProxyHost(),
         configStorage.getHttpProxyPort(), configStorage.getHttpProxyUsername(), configStorage.getHttpProxyPassword());
@@ -78,6 +74,11 @@ public class WxCpServiceJoddHttpImpl extends BaseWxCpServiceImpl<HttpConnectionP
 
   @Override
   public WxCpConfigStorage getWxCpConfigStorage() {
-    return this.configStorage;
+    return null;
+  }
+
+  @Override
+  public WxCpSuiteService getSuiteService() {
+    return null;
   }
 }

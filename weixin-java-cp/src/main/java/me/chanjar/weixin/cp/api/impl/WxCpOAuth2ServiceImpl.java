@@ -3,9 +3,7 @@ package me.chanjar.weixin.cp.api.impl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.util.http.URIUtil;
@@ -15,12 +13,9 @@ import me.chanjar.weixin.cp.api.WxCpService;
 import me.chanjar.weixin.cp.bean.WxCpOauth2UserInfo;
 import me.chanjar.weixin.cp.bean.WxCpProviderAuthInfo;
 import me.chanjar.weixin.cp.bean.WxCpUserDetail;
-import me.chanjar.weixin.cp.constant.WxCpApiPathConsts;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 
 import static me.chanjar.weixin.common.api.WxConsts.OAuth2Scope.*;
-import static me.chanjar.weixin.common.api.WxConsts.OAuth2Scope.SNSAPI_PRIVATEINFO;
-import static me.chanjar.weixin.common.api.WxConsts.OAuth2Scope.SNSAPI_USERINFO;
 import static me.chanjar.weixin.cp.constant.WxCpApiPathConsts.OAuth2.*;
 
 /**
@@ -92,12 +87,6 @@ public class WxCpOAuth2ServiceImpl implements WxCpOAuth2Service {
 
   @Override
   public WxCpOauth2UserInfo getUserInfo(String code) throws WxErrorException {
-  public WxCpProviderAuthInfo getAuthUserInfo(String authCode) throws WxErrorException {
-    throw new WxErrorException(WxError.builder().errorMsg("Not Implements").build());
-  }
-
-  @Override
-  public String[] getUserInfo(String code) throws WxErrorException {
     return this.getUserInfo(this.mainService.getWxCpConfigStorage().getAgentId(), code);
   }
 
@@ -122,5 +111,10 @@ public class WxCpOAuth2ServiceImpl implements WxCpOAuth2Service {
     param.addProperty("user_ticket", userTicket);
     String responseText = this.mainService.post(this.mainService.getWxCpConfigStorage().getApiUrl(GET_USER_DETAIL), param.toString());
     return WxCpGsonBuilder.create().fromJson(responseText, WxCpUserDetail.class);
+  }
+
+  @Override
+  public WxCpProviderAuthInfo getAuthUserInfo(String authCode) throws WxErrorException {
+    throw new WxErrorException(WxError.builder().errorMsg("Not Implements").build());
   }
 }

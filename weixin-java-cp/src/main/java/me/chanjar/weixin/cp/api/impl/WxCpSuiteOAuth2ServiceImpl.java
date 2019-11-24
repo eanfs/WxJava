@@ -10,6 +10,7 @@ import me.chanjar.weixin.common.util.http.URIUtil;
 import me.chanjar.weixin.common.util.json.GsonHelper;
 import me.chanjar.weixin.cp.api.WxCpOAuth2Service;
 import me.chanjar.weixin.cp.api.WxCpSuiteService;
+import me.chanjar.weixin.cp.bean.WxCpOauth2UserInfo;
 import me.chanjar.weixin.cp.bean.WxCpProviderAuthInfo;
 import me.chanjar.weixin.cp.bean.WxCpUserDetail;
 import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
@@ -88,23 +89,23 @@ public class WxCpSuiteOAuth2ServiceImpl implements WxCpOAuth2Service {
   }
 
   @Override
-  public String[] getUserInfo(String code) throws WxErrorException {
+  public WxCpOauth2UserInfo getUserInfo(String code) throws WxErrorException {
     String url = String.format("https://qyapi.weixin.qq.com/cgi-bin/service/getuserinfo3rd?code=%s&access_token=%s",
       code, this.mainService.getWxCpSuiteComponentService().getSuiteAccessToken(false));
     String responseText = this.mainService.get(url, null);
     JsonElement je = new JsonParser().parse(responseText);
     JsonObject jo = je.getAsJsonObject();
-    return new String[]{GsonHelper.getString(jo, "CorpId"),
-      GsonHelper.getString(jo, "UserId"),
-      GsonHelper.getString(jo, "DeviceId"),
-      GsonHelper.getString(jo, "OpenId"),
-      GsonHelper.getString(jo, "user_ticket"),
-      GsonHelper.getString(jo, "expires_in")
-    };
+    WxCpOauth2UserInfo userInfo= WxCpOauth2UserInfo.builder().deviceId(GsonHelper.getString(jo, "DeviceId"))
+      .openId(GsonHelper.getString(jo, "OpenId"))
+      .userId(GsonHelper.getString(jo, "UserId"))
+      .expiresIn(GsonHelper.getString(jo, "expires_in"))
+      .userTicket(GsonHelper.getString(jo, "user_ticket"))
+      .corpId(GsonHelper.getString(jo, "CorpId")).build();
+    return userInfo;
   }
 
   @Override
-  public String[] getUserInfo(Integer agentId, String code) throws WxErrorException {
+  public WxCpOauth2UserInfo getUserInfo(Integer agentId, String code) throws WxErrorException {
     throw new WxErrorException(WxError.builder().errorMsg("Suite 应用不实现").build());
   }
 

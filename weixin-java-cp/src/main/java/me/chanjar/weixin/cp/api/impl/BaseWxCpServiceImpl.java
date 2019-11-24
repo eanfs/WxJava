@@ -1,13 +1,6 @@
 package me.chanjar.weixin.cp.api.impl;
 
 import com.google.common.base.Joiner;
-import java.io.File;
-import java.io.IOException;
-
-import me.chanjar.weixin.cp.api.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,9 +24,6 @@ import me.chanjar.weixin.cp.bean.WxCpMaJsCode2SessionResult;
 import me.chanjar.weixin.cp.bean.WxCpMessage;
 import me.chanjar.weixin.cp.bean.WxCpMessageSendResult;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
-import me.chanjar.weixin.cp.constant.WxCpApiPathConsts;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,11 +48,7 @@ public abstract class BaseWxCpServiceImpl<H, P> implements WxCpService, RequestH
   private WxCpOaService         oaService         = new WxCpOaServiceImpl(this);
   private WxCpTaskCardService   taskCardService   = new WxCpTaskCardServiceImpl(this);
   private WxCpExternalContactService externalContactService = new WxCpExternalContactServiceImpl(this);
-  private WxCpMediaService mediaService = new WxCpMediaServiceImpl(this);
-  private WxCpMenuService menuService = new WxCpMenuServiceImpl(this);
-  private WxCpOAuth2Service oauth2Service = new WxCpOAuth2ServiceImpl(this);
-  private WxCpTagService tagService = new WxCpTagServiceImpl(this);
-  private WxCpAgentService agentService = new WxCpAgentServiceImpl(this);
+
 
 
   /**

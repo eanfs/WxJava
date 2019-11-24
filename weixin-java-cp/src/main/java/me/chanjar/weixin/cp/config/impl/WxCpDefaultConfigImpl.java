@@ -1,5 +1,4 @@
 package me.chanjar.weixin.cp.config.impl;
-package me.chanjar.weixin.cp.config;
 
 import me.chanjar.weixin.common.bean.WxAccessToken;
 import me.chanjar.weixin.common.util.http.apache.ApacheHttpClientBuilder;
@@ -9,6 +8,8 @@ import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * 基于内存的微信配置provider，在实际生产环境中应该将这些配置持久化.
@@ -20,11 +21,9 @@ public class WxCpDefaultConfigImpl implements WxCpConfigStorage, Serializable {
 
   private volatile String corpId;
   private volatile String corpSecret;
-  protected volatile Map<String, String> suiteVerifyTickets = new Hashtable<>();
-  protected volatile Map<String, String> suiteAccessTokens = new Hashtable<>();
+  private volatile Map<String, String> suiteVerifyTickets = new Hashtable<>();
+  private volatile Map<String, String> suiteAccessTokens = new Hashtable<>();
 
-  protected volatile String corpId;
-  protected volatile String corpSecret;
 
   private volatile String token;
   protected volatile String accessToken;

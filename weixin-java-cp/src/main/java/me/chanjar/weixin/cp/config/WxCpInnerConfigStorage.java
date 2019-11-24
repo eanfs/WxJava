@@ -20,6 +20,36 @@ public class WxCpInnerConfigStorage implements WxCpConfigStorage {
   }
 
   @Override
+  public void setBaseApiUrl(String baseUrl) {
+
+  }
+
+  @Override
+  public String getApiUrl(String path) {
+    return null;
+  }
+
+  @Override
+  public String getSuiteVerifyTicket(String suiteId) {
+    return null;
+  }
+
+  @Override
+  public String getSuiteAccessToken(String suiteId) {
+    return null;
+  }
+
+  @Override
+  public void updateSuiteVerifyTicket(String suiteId, String ticket, int expiresIn) {
+
+  }
+
+  @Override
+  public void updateSuiteAccessToken(String authCorpId, String accessToken, int expiresIn) {
+
+  }
+
+  @Override
   public String getAccessToken() {
     return wxCpSuiteConfigStorage.getAuthCorpAccessToken(authCorpId);
   }

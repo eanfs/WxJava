@@ -4,7 +4,7 @@ import me.chanjar.weixin.common.bean.WxAccessToken;
 import me.chanjar.weixin.common.util.http.apache.ApacheHttpClientBuilder;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
 import me.chanjar.weixin.cp.constant.WxCpApiPathConsts;
-import me.chanjar.weixin.cp.WxCpConsts;
+import me.chanjar.weixin.cp.constant.WxCpConsts;
 import org.apache.commons.lang3.StringUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -43,6 +43,9 @@ public class WxCpRedisConfigImpl implements WxCpConfigStorage {
   private volatile ApacheHttpClientBuilder apacheHttpClientBuilder;
 
   protected volatile String baseApiUrl;
+
+  private volatile String keyPrefix;
+
 
   @Override
   public void setBaseApiUrl(String baseUrl) {
@@ -268,6 +271,34 @@ public class WxCpRedisConfigImpl implements WxCpConfigStorage {
 
       return 0L;
 
+    }
+  }
+
+  @Override
+  public synchronized void updateSuiteAccessToken(String suiteId, String accessToken, int expiresInSeconds) {
+    try (Jedis jedis = this.jedisPool.getResource()) {
+      jedis.setex(WxCpConsts.REDIS_KEY_SUITE_ACCESS_TOKEN + suiteId, (expiresInSeconds - 200) * 1000, accessToken);
+    }
+  }
+
+  @Override
+  public String getSuiteVerifyTicket(String suiteId) {
+    try (Jedis jedis = this.jedisPool.getResource()) {
+      return jedis.get(WxCpConsts.REDIS_KEY_SUITE_TICKET);
+    }
+  }
+
+  @Override
+  public String getSuiteAccessToken(String suiteId) {
+    try (Jedis jedis = this.jedisPool.getResource()) {
+      return jedis.get(WxCpConsts.REDIS_KEY_SUITE_ACCESS_TOKEN);
+    }
+  }
+
+  @Override
+  public synchronized void updateSuiteVerifyTicket(String suiteId, String ticket, int expiresInSeconds) {
+    try (Jedis jedis = this.jedisPool.getResource()) {
+      jedis.setex(WxCpConsts.REDIS_KEY_SUITE_TICKET + suiteId, (expiresInSeconds - 200) * 1000, ticket);
     }
   }
 

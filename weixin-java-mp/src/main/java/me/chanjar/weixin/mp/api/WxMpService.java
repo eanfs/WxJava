@@ -500,6 +500,8 @@ public interface WxMpService {
    * @return WxMpWifiService
    */
   WxMpOcrService getOcrService();
+
+  /**
    * 返回快速注册小程序实现接口，以方便调用其各个接口
    *
    * @return WxMpRegisterAppService
@@ -538,8 +540,6 @@ public interface WxMpService {
 
   void setAiOpenService(WxMpAiOpenService aiOpenService);
 
-  void setRegisterAppService(WxMpRegisterAppService registerAppService);
-  
   void setMarketingService(WxMpMarketingService marketingService);
 
   void setOcrService(WxMpOcrService ocrService);

@@ -7,6 +7,7 @@ import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.util.http.HttpType;
 import me.chanjar.weixin.common.util.http.okhttp.OkHttpProxyInfo;
+import me.chanjar.weixin.cp.api.WxCpSuiteService;
 import me.chanjar.weixin.cp.config.WxCpConfigStorage;
 import okhttp3.*;
 
@@ -62,17 +63,11 @@ public class WxCpServiceOkHttpImpl extends BaseWxCpServiceImpl<OkHttpClient, OkH
       WxError error = WxError.fromJson(resultContent, WxType.CP);
       if (error.getErrorCode() != 0) {
         throw new WxErrorException(error);
-          WxError error = WxError.fromJson(resultContent, WxType.CP);
-          if (error.getErrorCode() != 0) {
-            throw new WxErrorException(error);
-          }
-          WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
-          this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(),
-            accessToken.getExpiresIn());
-        }
-        WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
-          this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(),
-            accessToken.getExpiresIn());
+      }
+      WxAccessToken accessToken = WxAccessToken.fromJson(resultContent);
+      this.configStorage.updateAccessToken(this.configStorage.getAgentId(), accessToken.getAccessToken(),
+        accessToken.getExpiresIn());
+
     }
     return this.configStorage.getAccessToken();
   }
@@ -109,5 +104,10 @@ public class WxCpServiceOkHttpImpl extends BaseWxCpServiceImpl<OkHttpClient, OkH
   @Override
   public WxCpConfigStorage getWxCpConfigStorage() {
     return this.configStorage;
+  }
+
+  @Override
+  public WxCpSuiteService getSuiteService() {
+    return null;
   }
 }

@@ -3,18 +3,11 @@ package me.chanjar.weixin.cp.bean;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Data;
-import me.chanjar.weixin.common.api.WxConsts;
-import me.chanjar.weixin.cp.bean.article.MpContentItem;
-import me.chanjar.weixin.cp.bean.article.MpnewsArticle;
-import me.chanjar.weixin.cp.bean.article.NewArticle;
-import me.chanjar.weixin.cp.bean.messagebuilder.*;
-import me.chanjar.weixin.cp.util.json.WxCpGsonBuilder;
 import me.chanjar.weixin.common.api.WxConsts.KefuMsgType;
 import me.chanjar.weixin.cp.bean.article.MpnewsArticle;
 import me.chanjar.weixin.cp.bean.article.NewArticle;
 import me.chanjar.weixin.cp.bean.messagebuilder.*;
 import me.chanjar.weixin.cp.bean.taskcard.TaskCardButton;
-import me.chanjar.weixin.cp.constant.WxCpConsts;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -43,9 +36,6 @@ public class WxCpMessage implements Serializable {
   private String thumbMediaId;
   private String title;
   private String description;
-  private String appId;
-  private String page;
-  private Boolean emphasisFirstItem;
   private String musicUrl;
   private String hqMusicUrl;
   private String safe;
@@ -57,7 +47,6 @@ public class WxCpMessage implements Serializable {
   private String page;
   private Boolean emphasisFirstItem;
   private Map<String, String> contentItems;
-  private List<MpContentItem> contentItems = new ArrayList<>();
 
   /**
    * 任务卡片特有的属性.
@@ -126,13 +115,6 @@ public class WxCpMessage implements Serializable {
    */
   public static FileBuilder FILE() {
     return new FileBuilder();
-  }
-
-  /**
-   * 获得小程序消息 builder.
-   */
-  public static MiniAppNoticeBuilder MPNOTICE() {
-    return new MiniAppNoticeBuilder();
   }
 
   /*
@@ -285,27 +267,6 @@ public class WxCpMessage implements Serializable {
           newsJsonObject.add("articles", articleJsonArray);
         }
         messageJson.add("mpnews", newsJsonObject);
-        break;
-      }
-      case KefuMsgType.MINIPROGRAMNOTICE: {
-
-        JsonObject miniProgramPage = new JsonObject();
-        miniProgramPage.addProperty("title", this.getTitle());
-        miniProgramPage.addProperty("appid", this.getAppId());
-        miniProgramPage.addProperty("page", this.getPage());
-        miniProgramPage.addProperty("description", this.getDescription());
-        miniProgramPage.addProperty("emphasis_first_item", this.getEmphasisFirstItem());
-
-        JsonArray articleJsonArray = new JsonArray();
-        for (MpContentItem article : this.getContentItems()) {
-          JsonObject articleJson = new JsonObject();
-          articleJson.addProperty("key", article.getKey());
-          articleJson.addProperty("value", article.getValue());
-          articleJsonArray.add(articleJson);
-        }
-        miniProgramPage.add("content_item", articleJsonArray);
-        messageJson.add("miniprogram_notice", miniProgramPage);
-
         break;
       }
       case KefuMsgType.TASKCARD: {
